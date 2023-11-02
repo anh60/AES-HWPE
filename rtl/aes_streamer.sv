@@ -7,13 +7,19 @@
 import hwpe_stream_interfaces::*;
 import hwpe_stream_package::*;
 
-module aes_streamer #(
-        // Number of master ports (what is?)
+module aes_streamer 
+
+    // --- PARAMETERS ---
+    #(
+        // Number of master ports
         parameter int unsigned MP = 2,
 
-        // FIFO depth (what value?)
+        // FIFO depth
         parameter int unsigned FD = 2
-    )(
+    )
+    
+    // --- PORTS ---
+    (
         // Global signals
         input logic clk_i,
         input logic rst_ni,
@@ -37,7 +43,7 @@ module aes_streamer #(
         output flags_streamer_t flags_o
     );
 
-    logic a_tcdm_fifo_ready
+    logic a_tcdm_fifo_ready;
 
     // FIFO input stream
     hwpe_stream_intf_stream #(
