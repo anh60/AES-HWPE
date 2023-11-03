@@ -14,8 +14,11 @@ module aes_top
         // Number of cores (what is?)
         parameter int unsigned N_CORES = 1,
 
-        // Number of master ports
+        // Number of master ports (TCDM interfaces)
         parameter int unsigned MP  = 2,
+
+        // Identifier (used in control unit)
+        parameter int unsigned ID = 10
     )
     
     // --- PORTS ---
@@ -25,21 +28,22 @@ module aes_top
         input logic rst_ni,
         input logic test_mode_i,
 
-        // Events (data outputs?)
+        // Events (what is? outputs to memory?)
         output logic [N_CORES-1:0][REGFILE_N_EVT-1:0] evt_o,
 
-        // TCDM master ports (data)
+        // TCDM master ports (HWPE-Mem)
         hwpe_stream_intf_tcdm.master tcdm,
 
-        // Periph slave ports (control)
+        // Periph slave ports (APB / peripheral bus)
         hwpe_ctrl_intf_periph.slave periph
     );
 
+    // Streamer signals
     logic enable, clear;
-
-    // Control signals / flags (slave interface?)
     ctrl_streamer_t  streamer_ctrl;
     flags_streamer_t streamer_flags;
+
+    // Engine signals
     ctrl_engine_t    engine_ctrl;
     flags_engine_t   engine_flags;
 
@@ -55,7 +59,7 @@ module aes_top
         .clk ( clk_i )
     );
 
-    // --- Streamer ---
+    // Streamer module
     aes_streamer #(.MP ( MP )) i_streamer
     (
         .clk_i            ( clk_i          ),
@@ -70,7 +74,7 @@ module aes_top
         .flags_o          ( streamer_flags )
     );
 
-    // --- Engine ---
+    // Engine module
     aes_engine i_engine
     (
         .clk_i            ( clk_i          ),
@@ -80,11 +84,12 @@ module aes_top
         .b_o              ( b.source       ),
         .ctrl_i           ( engine_ctrl    ),
         .flags_o          ( engine_flags   )
-    )
+    );
 
-    // --- Control ---
+    // Control
+        // Insert control module here
 
-    // What this do?
+    // Constantly drive streamer enable to logic high
     assign enable = 1'b1;
 
 endmodule
