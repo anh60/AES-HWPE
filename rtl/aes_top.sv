@@ -17,7 +17,7 @@ module aes_top
         // Number of master ports (TCDM interfaces)
         parameter int unsigned MP  = 2,
 
-        // Identifier (used in control unit)
+        // ID width? (used in control unit)
         parameter int unsigned ID = 10
     )
     
@@ -28,24 +28,22 @@ module aes_top
         input logic rst_ni,
         input logic test_mode_i,
 
-        // Events (what is? outputs to memory?)
+        // Events
         output logic [N_CORES-1:0][REGFILE_N_EVT-1:0] evt_o,
 
         // TCDM master ports (HWPE-Mem)
         hwpe_stream_intf_tcdm.master tcdm,
 
-        // Periph slave ports (APB / peripheral bus)
+        // Periph slave ports (APB)
         hwpe_ctrl_intf_periph.slave periph
     );
 
-    // Streamer signals
-    logic enable, clear;
-    ctrl_streamer_t  streamer_ctrl;
-    flags_streamer_t streamer_flags;
 
-    // Engine signals
-    ctrl_engine_t    engine_ctrl;
-    flags_engine_t   engine_flags;
+    logic enable, clear;
+    ctrl_streamer_t  streamer_ctrl;     // ctrl -> streamer
+    flags_streamer_t streamer_flags;    // streamer -> ctrl
+    ctrl_engine_t    engine_ctrl;       // ctrl -> engine
+    flags_engine_t   engine_flags;      // engine -> ctrl
 
     // Internal input stream interface
     hwpe_stream_intf_stream #(.DATA_WIDTH(32)) a 
@@ -60,34 +58,52 @@ module aes_top
     );
 
     // Streamer module
-    aes_streamer #(.MP ( MP )) i_streamer
-    (
-        .clk_i            ( clk_i          ),
-        .rst_ni           ( rst_ni         ),
-        .test_mode_i      ( test_mode_i    ),
-        .enable_i         ( enable         ),
-        .clear_i          ( clear          ),
-        .a_o              ( a.source       ),
-        .b_i              ( b.sink         ),
-        .tcdm             ( tcdm           ),
-        .ctrl_i           ( streamer_ctrl  ),
-        .flags_o          ( streamer_flags )
+    aes_streamer #(
+        .MP ( MP )
+    ) i_streamer (
+        .clk_i              ( clk_i          ),
+        .rst_ni             ( rst_ni         ),
+        .test_mode_i        ( test_mode_i    ),
+        .enable_i           ( enable         ),
+        .clear_i            ( clear          ),
+        .a_o                ( a.source       ),
+        .b_i                ( b.sink         ),
+        .tcdm               ( tcdm           ),
+        .ctrl_i             ( streamer_ctrl  ),
+        .flags_o            ( streamer_flags )
     );
 
     // Engine module
     aes_engine i_engine
     (
-        .clk_i            ( clk_i          ),
-        .rst_ni           ( rst_ni         ),
-        .test_mode_i      ( test_mode_i    ),
-        .a_i              ( a.sink         ),
-        .b_o              ( b.source       ),
-        .ctrl_i           ( engine_ctrl    ),
-        .flags_o          ( engine_flags   )
+        .clk_i              ( clk_i          ),
+        .rst_ni             ( rst_ni         ),
+        .test_mode_i        ( test_mode_i    ),
+        .a_i                ( a.sink         ),
+        .b_o                ( b.source       ),
+        .ctrl_i             ( engine_ctrl    ),
+        .flags_o            ( engine_flags   )
     );
 
-    // Control
-        // Insert control module here
+    // Control module
+    aes_ctrl #(
+        .N_CORES            ( N_CORES        ),
+        .N_CONTEXT          ( 2              ),
+        .N_IO_REGS          ( 16             ),
+        .N_GENERIC_REGS     ( 8              ),
+        .ID                 ( ID             )
+    ) i_ctrl (
+        .clk_i              ( clk_i          ),
+        .rst_ni             ( rst_ni         ),
+        .test_mode_i        ( test_mode_i    ),
+        .clear_o            ( clear          ),
+        .evt_o              ( evt_o          ),
+        .ctrl_streamer_o    ( streamer_ctrl  ),
+        .flags_streamer_i   ( streamer_flags ),
+        .ctrl_engine_o      ( engine_ctrl    ),
+        .flags_engine_i     ( engine_flags   ),
+        .periph             ( periph         )
+    );
 
     // Constantly drive streamer enable to logic high
     assign enable = 1'b1;
