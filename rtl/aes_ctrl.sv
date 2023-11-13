@@ -8,19 +8,23 @@ module aes_ctrl
 
     // --- PARAMETERS ---
     #(  
-        parameter int unsigned N_CORES = 1,
+        // Max number of processor cores supported.
+        parameter int unsigned N_CORES = 1, 
 
-        // What is?
-        parameter int unsigned N_CONTEXT = 2,
+        // Max number of different execution contexts or threads per core that the register file can handle.
+        parameter int unsigned N_CONTEXT = 2, 
 
-        // What is?
-        parameter int unsigned N_IO_REGS = 16,
+        // Max number of registers dedicated to Input/Output operations. These are accessible from the processor. 
+        // The reg_file.hwpe_params registers (input) can be mapped to the streamer_ctrl_cfg registers (output), 
+        // meaning the processor can dynamically update the streamer controller for data transfers based on specific hardware parameters.
+        parameter int unsigned N_IO_REGS = 16, 
 
-        // What is?
-        parameter int unsigned N_GENERIC_REGS = 8,
+        // Max number of generic registers. General purpose registers used by the processor to influence the control behavior.
+        // An example would be to store start and stop addresses for the targeted encrypted AES data used by AES control.
+        parameter int unsigned N_GENERIC_REGS = 8, 
 
-        // ID width?
-        parameter int unsigned ID = 10
+        // ID bus width used by the master and the slave to validate a handshake.
+        parameter int unsigned ID = 10 
     )
     
     // --- PORTS ---
