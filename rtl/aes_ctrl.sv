@@ -4,6 +4,8 @@
  *
  */
 
+import aes_package::*;
+import hwpe_ctrl_package::*;
 module aes_ctrl 
 
     // --- PARAMETERS ---
