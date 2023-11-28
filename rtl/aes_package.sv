@@ -8,12 +8,26 @@ import hwpe_stream_package::*;
 
 package aes_package;
 
-  parameter int unsigned AES_BLOCK_LENGTH  = 256;
+  // Define the length of an AES encryption/decryption block in bits.
+  parameter int unsigned AES_BLOCK_BIT_LENGTH = 256;
 
-  // registers in register file
-  parameter int unsigned AES_REG_ENCRYPT_START_ADDR_IN  = 0;
-  parameter int unsigned AES_REG_ENCRYPT_START_ADDR_OUT = 1;
-  parameter int unsigned AES_REG_ENCRYPT_LENGTH         = 2;
+  // AES Register Definitions
+  // These parameters are used to define the start addresses and operational details 
+  // for plaintext and ciphertext in the AES encryption/decryption process.
+
+  // AES_REG_PLAINTEXT_ADDR: Start address in the register file for the plaintext data.
+  // For encryption, data is read from this address.
+  // For decryption, data is written to this address.
+  parameter int unsigned AES_REG_PLAINTEXT_ADDR = 0;
+
+  // AES_REG_CIPHERTEXT_ADDR: Start address in the register file for the ciphertext data.
+  // For encryption, data is written to this address.
+  // For decryption, data is from to this address.
+  parameter int unsigned AES_REG_CIPHERTEXT_ADDR = 1;
+
+  // AES_REG_NUM_BLOCKS: Specifies the number of blocks to be encrypted or decrypted.
+  // Used together wtih AES_REG_PLAINTEXT_ADDR and AES_REG_CIPHERTEXT_ADDR to calculate read/write length.
+  parameter int unsigned AES_REG_NUM_BLOCKS = 2;
 
 
   typedef struct packed {
