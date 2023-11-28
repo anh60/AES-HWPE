@@ -75,12 +75,12 @@ module aes_ctrl
         .clk               (clk_i            ),
         .reset_n           (rst_ni           ),
         .clear             (clear_i          ),
-        .streamer_ctrl     (ctrl_streamer_o  ),
-        .streamer_flags    (flags_streamer_i ),
-        //.ctrl_engine_o     (ctrl_engine_o    ),
-        //.flags_engine_i    (flags_engine_i   ),
-        .slave_ctrl        (ctrl_slave_o     ),
-        .slave_flags       (flags_slave_i    )
+        .streamer_ctrl_o   (ctrl_streamer_o  ),
+        .streamer_flags_i  (flags_streamer_i ),
+        //.ctrl_engine_o   (ctrl_engine_o    ),
+        //.flags_engine_i  (flags_engine_i   ),
+        .slave_ctrl_o      (ctrl_slave_o     ),
+        .slave_flags_i     (flags_slave_i    )
     );
 
     // Bind the output event, which is propagated to the event unit and used
