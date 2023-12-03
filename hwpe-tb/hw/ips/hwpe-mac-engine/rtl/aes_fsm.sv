@@ -54,8 +54,9 @@ module aes_fsm (
         if ((streamer_flags_i.chipertext_sink_flags.done | streamer_flags_i.chipertext_sink_flags.ready_start) 
             & (streamer_flags_i.plaintext_source_flags.done | streamer_flags_i.plaintext_source_flags.ready_start)
             & streamer_flags_i.tcdm_fifo_empty
-            )
+        ) begin 
           next_state = AES_FINISHED;
+        end 
       end
 
       //FINSIHED -> IDLE
@@ -82,7 +83,7 @@ module aes_fsm (
     //Streamer
     streamer_ctrl_cfg.plaintext_source_ctrl.req_start = '0;
     streamer_ctrl_cfg.chipertext_sink_ctrl.req_start  = '0;
-    streamer_ctrl_o = streamer_ctrl_cfg;
+    streamer_ctrl_o <= streamer_ctrl_cfg;
     
     //Slave peripheral? 
     slave_ctrl_o = '0;
