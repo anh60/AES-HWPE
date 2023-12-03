@@ -204,6 +204,7 @@ module mac_engine
       d_nonshifted       = $signed(r_mult);
       d_nonshifted_valid = r_mult_valid;
     end
+
     else begin
       d_nonshifted       = r_acc;
       d_nonshifted_valid = r_acc_valid;
