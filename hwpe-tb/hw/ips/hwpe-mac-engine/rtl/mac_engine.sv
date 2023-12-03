@@ -26,7 +26,7 @@
  *    bits and streamed out as d_o.
  */
 
-import mac_package::*;
+import aes_package::*;
 
 module mac_engine
 (

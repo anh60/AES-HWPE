@@ -13,7 +13,6 @@
  * specific language governing permissions and limitations under the License.
  */
 
-import mac_package::*;
 import aes_package::*;
 import hwpe_ctrl_package::*;
 

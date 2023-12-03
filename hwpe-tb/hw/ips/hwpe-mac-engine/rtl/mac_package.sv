@@ -40,47 +40,5 @@ package mac_package;
   parameter int unsigned MAC_UCODE_MNEM_ITERSTRIDE = 5 - 4;
   parameter int unsigned MAC_UCODE_MNEM_ONESTRIDE  = 6 - 4;
 
-  typedef struct packed {
-    logic clear;
-    logic enable;
-    logic simple_mul;
-    logic start;
-    logic unsigned [$clog2(32)-1       :0] shift;
-    logic unsigned [$clog2(MAC_CNT_LEN):0] len; // 1 bit more as cnt starts from 1, not 0
-  } ctrl_engine_t; 
-
-  typedef struct packed {
-    logic unsigned [$clog2(MAC_CNT_LEN):0] cnt; // 1 bit more as cnt starts from 1, not 0
-    logic acc_valid;
-  } flags_engine_t;
-
-  typedef struct packed {
-    hwpe_stream_package::ctrl_sourcesink_t a_source_ctrl;
-    hwpe_stream_package::ctrl_sourcesink_t b_source_ctrl;
-    hwpe_stream_package::ctrl_sourcesink_t c_source_ctrl;
-    hwpe_stream_package::ctrl_sourcesink_t d_sink_ctrl;
-  } ctrl_streamer_t;
-
-  typedef struct packed {
-    hwpe_stream_package::flags_sourcesink_t a_source_flags;
-    hwpe_stream_package::flags_sourcesink_t b_source_flags;
-    hwpe_stream_package::flags_sourcesink_t c_source_flags;
-    hwpe_stream_package::flags_sourcesink_t d_sink_flags;
-  } flags_streamer_t;
-
-  typedef struct packed {
-    logic simple_mul;
-    logic unsigned [$clog2(32)-1       :0] shift;
-    logic unsigned [$clog2(MAC_CNT_LEN):0] len; // 1 bit more as cnt starts from 1, not 0
-  } ctrl_fsm_t;
-
-  typedef enum {
-    FSM_IDLE,
-    FSM_START,
-    FSM_COMPUTE,
-    FSM_WAIT,
-    FSM_UPDATEIDX,
-    FSM_TERMINATE
-  } state_fsm_t;
 
 endpackage // mac_package
