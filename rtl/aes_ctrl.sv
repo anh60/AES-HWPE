@@ -79,10 +79,11 @@ module aes_ctrl
         .clear             (clear_i          ),
         .streamer_ctrl_o   (ctrl_streamer_o  ),
         .streamer_flags_i  (flags_streamer_i ),
-        //.ctrl_engine_o   (ctrl_engine_o    ),
-        //.flags_engine_i  (flags_engine_i   ),
+        .ctrl_engine_o     (ctrl_engine_o    ),
+        .flags_engine_i    (flags_engine_i   ),
         .slave_ctrl_o      (ctrl_slave_o     ),
-        .slave_flags_i     (flags_slave_i    )
+        .slave_flags_i     (flags_slave_i    ), 
+        .ctrl_regfile_t    (reg_file         )
     );
 
     // Bind the output event, which is propagated to the event unit and used
