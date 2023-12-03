@@ -79,54 +79,6 @@ module mac_ctrl
   );
   assign evt_o = slave_flags.evt;
 
-  /* Direct register file mappings */
-  assign static_reg_nb_iter    = reg_file.hwpe_params[MAC_REG_NB_ITER]  + 1;
-  assign static_reg_len_iter   = reg_file.hwpe_params[MAC_REG_LEN_ITER] + 1;
-  assign static_reg_shift      = reg_file.hwpe_params[MAC_REG_SHIFT_SIMPLEMUL][31:16];
-  assign static_reg_simplemul  = reg_file.hwpe_params[MAC_REG_SHIFT_SIMPLEMUL][0];
-  assign static_reg_vectstride = reg_file.hwpe_params[MAC_REG_SHIFT_VECTSTRIDE];
-  assign static_reg_onestride  = 4;
-
-  /* Microcode processor */
-  generate
-    if(ULOOP_HARDWIRED == 1) begin : hardwired_uloop_gen
-      assign uloop_bytecode = 196'h00000000000000000000000000000000000008cd11a12c05;
-    end
-    else begin : not_hardwired_uloop_gen
-      assign uloop_bytecode = reg_file.generic_params[5:0];
-    end
-  endgenerate
-
-  // currently hardwired
-  always_comb
-  begin
-    uloop_code = '0;
-    uloop_code.loops[0] = 8'h04;
-    for(int i=0; i<196; i++) begin
-      uloop_code.code [i] = uloop_bytecode[i];
-    end
-    uloop_code.range[0] = static_reg_nb_iter[11:0];
-  end
-
-  assign uloop_registers_read[MAC_UCODE_MNEM_NBITER]     = static_reg_nb_iter;
-  assign uloop_registers_read[MAC_UCODE_MNEM_ITERSTRIDE] = static_reg_vectstride;
-  assign uloop_registers_read[MAC_UCODE_MNEM_ONESTRIDE]  = static_reg_onestride;
-  assign uloop_registers_read[11:3] = '0;
-  hwpe_ctrl_uloop #(
-    .NB_LOOPS  ( 1  ),
-    .NB_REG    ( 4  ),
-    .NB_RO_REG ( 12 )
-  ) i_uloop (
-    .clk_i            ( clk_i                ),
-    .rst_ni           ( rst_ni               ),
-    .test_mode_i      ( test_mode_i          ),
-    .clear_i          ( clear_o              ),
-    .ctrl_i           ( uloop_ctrl           ),
-    .flags_o          ( uloop_flags          ),
-    .uloop_code_i     ( uloop_code           ),
-    .registers_read_i ( uloop_registers_read )
-  );
-
   /* Main FSM */
   aes_fsm fsm(
     .clk               (clk_i            ),
@@ -140,12 +92,5 @@ module mac_ctrl
     .slave_flags_i     (slave_flags      ), 
     .ctrl_regfile_t    (reg_file         )
   );
-
-  always_comb
-  begin
-    fsm_ctrl.simple_mul = static_reg_simplemul;
-    fsm_ctrl.shift      = static_reg_shift[$clog2(32)-1:0];
-    fsm_ctrl.len        = static_reg_len_iter[$clog2(MAC_CNT_LEN):0];
-  end
 
 endmodule // mac_ctrl
