@@ -128,18 +128,18 @@ module mac_ctrl
   );
 
   /* Main FSM */
-      aes_fsm fsm(
-        .clk               (clk_i            ),
-        .reset_n           (rst_ni           ),
-        .clear             (clear_o          ),
-        .streamer_ctrl_o   (ctrl_streamer_o  ),
-        .streamer_flags_i  (flags_streamer_i ),
-        .ctrl_engine_o     (ctrl_engine_o    ),
-        .flags_engine_i    (flags_engine_i   ),
-        .slave_ctrl_o      (slave_ctrl       ),
-        .slave_flags_i     (slave_flags      ), 
-        .ctrl_regfile_t    (reg_file         )
-    );
+  aes_fsm fsm(
+    .clk               (clk_i            ),
+    .reset_n           (rst_ni           ),
+    .clear             (clear_o          ),
+    .streamer_ctrl_o   (ctrl_streamer_o  ),
+    .streamer_flags_i  (flags_streamer_i ),
+    .ctrl_engine_o     (ctrl_engine_o    ),
+    .flags_engine_i    (flags_engine_i   ),
+    .slave_ctrl_o      (slave_ctrl       ),
+    .slave_flags_i     (slave_flags      ), 
+    .ctrl_regfile_t    (reg_file         )
+  );
 
   always_comb
   begin
