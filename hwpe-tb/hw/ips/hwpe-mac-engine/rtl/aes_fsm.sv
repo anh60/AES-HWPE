@@ -40,8 +40,9 @@ module aes_fsm (
 
       //IDLE -> STARTING
       AES_IDLE: begin
-        if(slave_flags_i.start)
+        if(slave_flags_i.start) begin
           next_state = AES_STARTING;
+        end
       end
       
       //STARTING -> WORKING
