@@ -47,19 +47,6 @@ module mac_engine
   output flags_engine_t          flags_o
 );
 
-  logic unsigned [$clog2(MAC_CNT_LEN):0] cnt;
-  logic unsigned [$clog2(MAC_CNT_LEN):0] r_cnt;
-  logic signed [63:0] c_shifted;
-  logic signed [63:0] mult;
-  logic signed [63:0] r_mult;
-  logic               r_mult_valid;
-  logic               r_mult_ready;
-  logic signed [64+$clog2(MAC_CNT_LEN)-1:0] r_acc;
-  logic                                     r_acc_valid;
-  logic                                     r_acc_ready;
-  logic signed [64+$clog2(MAC_CNT_LEN)-1:0] d_nonshifted;
-  logic                                     d_nonshifted_valid;
-
  
   always_comb
   begin
