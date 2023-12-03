@@ -13,7 +13,7 @@ module aes_fsm (
   input  flags_engine_t       flags_engine_i,
   output ctrl_slave_t         slave_ctrl_o,
   input  flags_slave_t        slave_flags_i,
-  input  ctrl_regfile_t       reg_file_i,
+  input  ctrl_regfile_t       reg_file_i
 );
 
   aes_state_t current_state, next_state;
