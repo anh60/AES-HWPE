@@ -14,6 +14,7 @@
  */
 
 import mac_package::*;
+import aes_package::*;
 import hwpe_ctrl_package::*;
 
 module mac_ctrl
@@ -127,22 +128,19 @@ module mac_ctrl
   );
 
   /* Main FSM */
-  mac_fsm i_fsm (
-    .clk_i            ( clk_i              ),
-    .rst_ni           ( rst_ni             ),
-    .test_mode_i      ( test_mode_i        ),
-    .clear_i          ( clear_o            ),
-    .ctrl_streamer_o  ( ctrl_streamer_o    ),
-    .flags_streamer_i ( flags_streamer_i   ),
-    .ctrl_engine_o    ( ctrl_engine_o      ),
-    .flags_engine_i   ( flags_engine_i     ),
-    .ctrl_uloop_o     ( uloop_ctrl         ),
-    .flags_uloop_i    ( uloop_flags        ),
-    .ctrl_slave_o     ( slave_ctrl         ),
-    .flags_slave_i    ( slave_flags        ),
-    .reg_file_i       ( reg_file           ),
-    .ctrl_i           ( fsm_ctrl           )
-  );
+      aes_fsm fsm(
+        .clk               (clk_i            ),
+        .reset_n           (rst_ni           ),
+        .clear             (clear_o          ),
+        .streamer_ctrl_o   (ctrl_streamer_o  ),
+        .streamer_flags_i  (flags_streamer_i ),
+        .ctrl_engine_o     (ctrl_engine_o    ),
+        .flags_engine_i    (flags_engine_i   ),
+        .slave_ctrl_o      (slave_ctrl       ),
+        .slave_flags_i     (slave_flags      ), 
+        .ctrl_regfile_t    (reg_file         )
+    );
+
   always_comb
   begin
     fsm_ctrl.simple_mul = static_reg_simplemul;

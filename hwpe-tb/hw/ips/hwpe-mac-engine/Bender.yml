@@ -17,9 +17,11 @@ sources:
       # levels 1 and 0, etc. Files within a level are ordered alphabetically.
       # Level 0
       - rtl/mac_package.sv
+      - rtl/aes_package.sv
+
       # Level 1
       - rtl/mac_engine.sv
-      - rtl/mac_fsm.sv
+      - rtl/aes_fsm.sv
       - rtl/mac_streamer.sv
       # Level 2
       - rtl/mac_ctrl.sv
