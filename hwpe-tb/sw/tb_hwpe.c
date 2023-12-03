@@ -49,25 +49,25 @@ int main()
 
   while ((offload_id_tmp = hwpe_acquire_job()) < 0)
     ;
-  /*
+
   // set up bytecode
-  hwpe_bytecode_set(HWPE_LOOPS1_OFFS,           0x00000000);
+  hwpe_bytecode_set(HWPE_LOOPS1_OFFS, 0x00000000);
   hwpe_bytecode_set(HWPE_BYTECODE5_LOOPS0_OFFS, 0x00040000);
-  hwpe_bytecode_set(HWPE_BYTECODE4_OFFS,        0x00000000);
-  hwpe_bytecode_set(HWPE_BYTECODE3_OFFS,        0x00000000);
-  hwpe_bytecode_set(HWPE_BYTECODE2_OFFS,        0x00000000);
-  hwpe_bytecode_set(HWPE_BYTECODE1_OFFS,        0x000008cd);
-  hwpe_bytecode_set(HWPE_BYTECODE0_OFFS,        0x11a12c05);
-  */
+  hwpe_bytecode_set(HWPE_BYTECODE4_OFFS, 0x00000000);
+  hwpe_bytecode_set(HWPE_BYTECODE3_OFFS, 0x00000000);
+  hwpe_bytecode_set(HWPE_BYTECODE2_OFFS, 0x00000000);
+  hwpe_bytecode_set(HWPE_BYTECODE1_OFFS, 0x000008cd);
+  hwpe_bytecode_set(HWPE_BYTECODE0_OFFS, 0x11a12c05);
+
   // job-dependent registers
   hwpe_a_addr_set((unsigned int)a);
   hwpe_b_addr_set((unsigned int)b);
   hwpe_c_addr_set((unsigned int)c);
   hwpe_d_addr_set((unsigned int)d);
-  /*
+
   hwpe_nb_iter_set(4);
-  hwpe_len_iter_set(32-1);
-  hwpe_vectstride_set(32*4);
+  hwpe_len_iter_set(32 - 1);
+  hwpe_vectstride_set(32 * 4);
   hwpe_shift_simplemul_set(hwpe_shift_simplemul_value(0, 0));
   // start hwpe operation
   hwpe_trigger_job();
@@ -90,7 +90,6 @@ int main()
 
   // return errors
   *(int *)0x80000000 = errors;
-  */
 
   return errors;
 }
