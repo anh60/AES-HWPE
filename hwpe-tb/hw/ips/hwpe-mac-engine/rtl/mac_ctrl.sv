@@ -77,7 +77,7 @@ module mac_ctrl
     .flags_engine_i    (flags_engine_i   ),
     .slave_ctrl_o      (slave_ctrl       ),
     .slave_flags_i     (slave_flags      ), 
-    .ctrl_regfile_t    (reg_file         )
+    .reg_file_i    (reg_file         )
   );
 
 endmodule // mac_ctrl
