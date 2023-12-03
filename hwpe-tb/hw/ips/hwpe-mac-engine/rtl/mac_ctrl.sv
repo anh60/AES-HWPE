@@ -46,20 +46,7 @@ module mac_ctrl
   flags_slave_t  slave_flags;
   ctrl_regfile_t reg_file;
 
-  logic unsigned [31:0] static_reg_nb_iter;
-  logic unsigned [31:0] static_reg_len_iter;
-  logic unsigned [31:0] static_reg_vectstride;
-  logic unsigned [31:0] static_reg_onestride;
-  logic unsigned [15:0] static_reg_shift;
-  logic static_reg_simplemul;
 
-  uloop_bytecode_t [31:0] uloop_bytecode;
-  uloop_code_t uloop_code;
-  ctrl_uloop_t   uloop_ctrl;
-  flags_uloop_t  uloop_flags;
-  logic [11:0][31:0] uloop_registers_read;
-
-  ctrl_fsm_t fsm_ctrl;
 
   /* Peripheral slave & register file */
   hwpe_ctrl_slave #(
