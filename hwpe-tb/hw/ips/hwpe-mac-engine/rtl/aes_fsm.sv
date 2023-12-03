@@ -101,10 +101,10 @@ module aes_fsm (
         //Streamer request
         //Should check if streamer is ready, and if not, should wait until ready...
         streamer_ctrl_o.plaintext_source_ctrl.req_start = 1'b1;
+        streamer_ctrl_o.chipertext_sink_ctrl.req_start = 1'b1;
       end 
 
       AES_WORKING: begin 
-        streamer_ctrl_o.chipertext_sink_ctrl.req_start = 1'b1;
       end
 
       AES_FINISHED: begin 
