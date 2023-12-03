@@ -204,7 +204,6 @@ module mac_engine
       d_nonshifted       = $signed(r_mult);
       d_nonshifted_valid = r_mult_valid;
     end
-
     else begin
       d_nonshifted       = r_acc;
       d_nonshifted_valid = r_acc_valid;
@@ -215,7 +214,7 @@ module mac_engine
   // no support for rounding and for saturation/clipping.
   always_comb
   begin
-    d_o.data  = a_i.data; // no saturation/clipping
+    d_o.data  <= a_i.data; // no saturation/clipping
     d_o.valid = ctrl_i.enable & d_nonshifted_valid;
     d_o.strb  = '1; // strb is always '1 --> all bytes are considered valid
   end
