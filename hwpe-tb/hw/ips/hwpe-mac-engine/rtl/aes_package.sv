@@ -49,7 +49,7 @@ package aes_package;
   } ctrl_engine_t; 
 
     typedef struct packed {
-    logic unsigned [$clog2(AES_BLOCK_LENGTH):0] chipertext_32byte_chunck_count; // 1 bit more as cnt starts from 1, not 0
+    logic unsigned [$clog2(AES_BLOCK_BIT_LENGTH):0] chipertext_32byte_chunck_count; // 1 bit more as cnt starts from 1, not 0
     logic chipertext_valid;
   } flags_engine_t;
 
