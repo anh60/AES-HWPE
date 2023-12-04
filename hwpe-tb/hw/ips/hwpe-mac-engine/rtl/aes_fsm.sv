@@ -76,7 +76,10 @@ module aes_fsm (
 
       //FINSIHED -> IDLE
       AES_FINISHED: begin
-        next_state = AES_IDLE;
+        if (streamer_flags_i.plaintext_source_flags.ready_start
+            & streamer_flags_i.chipertext_sink_flags.ready_start) begin 
+          next_state = AES_IDLE;
+        end 
       end
 
       // Default case to handle unexpected states
