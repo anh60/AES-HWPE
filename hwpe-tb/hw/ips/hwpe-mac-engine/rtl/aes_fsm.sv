@@ -142,7 +142,7 @@ always_comb
   begin: fsm_comb_reg
     //Change the number four to actually represent the size of the register
     //Plaintext stream
-    streamer_ctrl_cfg = '0;
+    //streamer_ctrl_cfg = '0;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.trans_size  = 1;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.line_stride = '0;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.line_length = 1;
