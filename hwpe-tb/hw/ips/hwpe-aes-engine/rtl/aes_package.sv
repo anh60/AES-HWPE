@@ -5,7 +5,6 @@
  */
 
 import hwpe_stream_package::*;
-import mac_package::*;
 
 
 package aes_package;

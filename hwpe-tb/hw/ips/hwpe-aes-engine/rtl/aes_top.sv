@@ -14,7 +14,6 @@
  */
 
 import aes_package::*;
-import mac_package::*;
 import hwpe_ctrl_package::*;
 
 module mac_top
