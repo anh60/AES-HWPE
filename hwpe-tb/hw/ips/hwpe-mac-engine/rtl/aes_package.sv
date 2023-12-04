@@ -40,7 +40,6 @@ package aes_package;
   typedef struct packed {
     hwpe_stream_package::flags_sourcesink_t plaintext_source_flags;
     hwpe_stream_package::flags_sourcesink_t chipertext_sink_flags;
-    logic tcdm_fifo_empty;
   } flags_streamer_t;
 
 

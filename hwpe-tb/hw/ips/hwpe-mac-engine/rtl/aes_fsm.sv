@@ -76,10 +76,7 @@ module aes_fsm (
 
       //FINSIHED -> IDLE
       AES_FINISHED: begin
-          if (streamer_flags_i.plaintext_source_flags.ready_start
-            & streamer_flags_i.chipertext_sink_flags.ready_start) begin 
           next_state = AES_IDLE;
-        end 
       end
 
       // Default case to handle unexpected states
@@ -128,10 +125,7 @@ module aes_fsm (
 
       AES_FINISHED: begin 
         ctrl_engine_o.enable  = '0;
-        if (streamer_flags_i.plaintext_source_flags.ready_start
-            & streamer_flags_i.chipertext_sink_flags.ready_start) begin 
-          slave_ctrl_o.done = 1'b1;
-        end 
+        slave_ctrl_o.done = 1'b1;
       end 
     endcase
 
