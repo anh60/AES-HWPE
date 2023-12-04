@@ -26,11 +26,15 @@ module aes_fsm (
   begin : fsm_seq
     if (~reset_n)
       current_state <= AES_IDLE;
+      cycle_counter <= 0;
+
     else if (clear)
       current_state <= AES_IDLE;
+      cycle_counter <= 0;
+
     else
       current_state <= next_state;
-      cycle_counter <= cycle_counter + 1; // Increment cycle counter
+      cycle_counter <= cycle_counter + 1;
   end
 
   // AES FSM: combinational next-state calculation process.
