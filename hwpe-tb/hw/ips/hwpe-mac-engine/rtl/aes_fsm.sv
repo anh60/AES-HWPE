@@ -92,6 +92,8 @@ module aes_fsm (
 
       AES_IDLE: begin 
         ctrl_engine_o.clear  = 1'b1;
+        ctrl_engine_o.enable  = '0;
+
       end 
 
       AES_STARTING: begin 
