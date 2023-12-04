@@ -16,16 +16,17 @@ module aes_fsm (
   input  ctrl_regfile_t       reg_file_i
 );
 
-  aes_state_t current_state, next_state;
+    aes_state_t current_state, next_state;
 
   ctrl_streamer_t streamer_ctrl_cfg;
+  logic [2:0] cycle_counter;  // Counter to keep track of cycles in WORKING state
 
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq
-    if(~reset_n)
+    if (~reset_n)
       current_state <= AES_IDLE;
-    else if(clear)
+    else if (clear)
       current_state <= AES_IDLE;
     else
       current_state <= next_state;
@@ -37,40 +38,43 @@ module aes_fsm (
     next_state = current_state;
 
     case(current_state)
-
       //IDLE -> STARTING
       AES_IDLE: begin
-        if(slave_flags_i.start) begin
+        if (slave_flags_i.start) begin
           next_state = AES_STARTING;
+          cycle_counter <= 0; // Reset cycle counter
         end
       end
       
       //STARTING -> WORKING
       AES_STARTING: begin
         if (streamer_flags_i.plaintext_source_flags.ready_start
-            & streamer_flags_i.chipertext_sink_flags.ready_start) begin 
-        next_state = AES_WORKING;
+            && streamer_flags_i.chipertext_sink_flags.ready_start) begin 
+          next_state = AES_WORKING;
+          cycle_counter <= cycle_counter + 1; // Increment cycle counter
         end 
       end 
       
       //WORKING -> FINISHED
       AES_WORKING: begin
-
-          //next_state = AES_FINISHED;
+        if (cycle_counter == 8) // Check if 8 cycles have passed
+          next_state = AES_FINISHED;
       end
 
       //FINSIHED -> IDLE
       AES_FINISHED: begin
         next_state = AES_IDLE;
+        cycle_counter <= 0; // Reset cycle counter
       end
 
       // Default case to handle unexpected states
       default: begin
         next_state = AES_IDLE;
+        cycle_counter <= 0; // Reset cycle counter
       end
     endcase
-
   end
+  
 
   // AES FSM: combinational output calculation process.
   always_comb
