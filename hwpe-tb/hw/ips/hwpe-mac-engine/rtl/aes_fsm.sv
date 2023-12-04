@@ -61,7 +61,7 @@ module aes_fsm (
 
       //FINSIHED -> IDLE
       AES_FINISHED: begin
-        next_state = AES_IDLE;
+        next_state = AES_WORKING;
       end
 
       // Default case to handle unexpected states
@@ -78,7 +78,6 @@ module aes_fsm (
     // engine
     ctrl_engine_o.clear   = '0;
     ctrl_engine_o.start   = '0;
-    ctrl_engine_o.enable  = '0;
 
     //Streamer
     streamer_ctrl_o = streamer_ctrl_cfg;
@@ -91,6 +90,7 @@ module aes_fsm (
     case(current_state) 
 
       AES_IDLE: begin 
+        ctrl_engine_o.enable  = '0;
         ctrl_engine_o.clear  = 1'b1;
       end 
 
