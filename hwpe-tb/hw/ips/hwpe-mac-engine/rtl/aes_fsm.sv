@@ -78,7 +78,7 @@ module aes_fsm (
     // engine
     ctrl_engine_o.clear   = '0;
     ctrl_engine_o.start   = '0;
-    ctrl_engine_o.enable  = '1;
+    ctrl_engine_o.enable  = '0;
 
     //Streamer
     streamer_ctrl_o = streamer_ctrl_cfg;
@@ -92,12 +92,11 @@ module aes_fsm (
 
       AES_IDLE: begin 
         ctrl_engine_o.clear  = 1'b1;
-        ctrl_engine_o.enable  = '0;
-
       end 
 
       AES_STARTING: begin 
         //Engine start
+        ctrl_engine_o.enable  = '1;
         ctrl_engine_o.start  = 1'b1;
         //Streamer request
         //Should check if streamer is ready, and if not, should wait until ready...
@@ -106,10 +105,11 @@ module aes_fsm (
       end 
 
       AES_WORKING: begin 
+        ctrl_engine_o.enable  = '1;
       end
 
       AES_FINISHED: begin 
-        ctrl_engine_o.enable = 1'b0;
+        ctrl_engine_o.enable  = '1;
         slave_ctrl_o.done = 1'b1;
       end 
     endcase
