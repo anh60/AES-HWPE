@@ -19,10 +19,18 @@ module mac_engine
   output flags_engine_t          flags_o
 );
 
+  logic unsigned [31:0]  data_reg;
+
  
+  always_ff @(posedge clk or negedge reset_n)
+  begin : data_mover
+    data_reg <= a_i.data;
+  end 
+
+
   always_comb
   begin
-    d_o.data = 32'b01110010100111010101110101001110;
+    d_o.data = data_reg;
     d_o.valid = ctrl_i.enable;
     d_o.strb  = '1; // strb is always '1 --> all bytes are considered valid
   end 
