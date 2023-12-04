@@ -121,7 +121,7 @@ always_comb
     //Change the number four to actually represent the size of the register
     //Plaintext stream
     streamer_ctrl_cfg = '0;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.trans_size  = 4;
+    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.trans_size  = 1;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.line_stride = '0;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.line_length = 4;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.feat_stride = '0;
@@ -131,7 +131,7 @@ always_comb
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.loop_outer  = '0;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.realign_type = '0;
     // Chipertext stream 
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.trans_size  = 4;
+    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.trans_size  = 1;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.line_stride = '0;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.line_length = 4;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.feat_stride = '0;
