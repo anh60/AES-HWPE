@@ -61,7 +61,7 @@ module aes_fsm (
       
       //WORKING -> FINISHED
       AES_WORKING: begin
-        if (cycle_counter == 8) // Check if 8 cycles have passed
+        if (cycle_counter == 7) // Check if 8 cycles have passed
           next_state = AES_FINISHED;
       end
 
