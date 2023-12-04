@@ -22,7 +22,7 @@ module mac_engine
   logic unsigned [31:0]  data_reg;
 
  
-  always_ff @(posedge clk or negedge reset_n)
+  always_ff @(posedge clk_i or negedge reset_ni)
   begin : data_mover
     data_reg <= a_i.data;
   end 
