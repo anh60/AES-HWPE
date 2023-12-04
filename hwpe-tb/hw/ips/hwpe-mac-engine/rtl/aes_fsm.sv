@@ -26,19 +26,28 @@ module aes_fsm (
   begin : fsm_seq
     if (~reset_n) begin
       current_state <= AES_IDLE;
-      cycle_counter <= 0;
     end
     else if (clear) begin
       current_state <= AES_IDLE;
-      cycle_counter <= 0;
     end 
     else begin
       current_state <= next_state;
-      cycle_counter <= cycle_counter + 1;
     end 
   end
 
-  // AES FSM: combinational next-state calculation process.
+  always_ff @(posedge clk or negedge reset_n)
+  begin : fsm_seq_cycle
+
+  if(current_state == AES_WORKING) begin 
+      cycle_counter <= cycle_counter + 1;
+  end 
+  else begin 
+      cycle_counter <= 0;
+  end 
+
+
+
+  end   
   always_comb
   begin : fsm_comb_next_state
     next_state = current_state;
@@ -61,8 +70,9 @@ module aes_fsm (
       
       //WORKING -> FINISHED
       AES_WORKING: begin
-        if (cycle_counter == 7) // Check if 8 cycles have passed
+        if (cycle_counter == 7) begin // Check if 8 cycles have passed
           next_state = AES_FINISHED;
+        end
       end
 
       //FINSIHED -> IDLE
