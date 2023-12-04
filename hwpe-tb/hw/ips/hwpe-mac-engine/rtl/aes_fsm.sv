@@ -68,7 +68,6 @@ module aes_fsm (
       // Default case to handle unexpected states
       default: begin
         next_state = AES_IDLE;
-        cycle_counter <= 0; // Reset cycle counter
       end
     endcase
   end
