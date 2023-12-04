@@ -51,12 +51,12 @@ module aes_fsm (
         if (streamer_flags_i.plaintext_source_flags.ready_start
             && streamer_flags_i.chipertext_sink_flags.ready_start) begin 
           next_state = AES_WORKING;
-          cycle_counter <= cycle_counter + 1; // Increment cycle counter
         end 
       end 
       
       //WORKING -> FINISHED
       AES_WORKING: begin
+        cycle_counter <= cycle_counter + 1; // Increment cycle counter
         if (cycle_counter == 8) // Check if 8 cycles have passed
           next_state = AES_FINISHED;
       end
@@ -64,7 +64,6 @@ module aes_fsm (
       //FINSIHED -> IDLE
       AES_FINISHED: begin
         next_state = AES_IDLE;
-        cycle_counter <= 0; // Reset cycle counter
       end
 
       // Default case to handle unexpected states
@@ -74,7 +73,7 @@ module aes_fsm (
       end
     endcase
   end
-  
+
 
   // AES FSM: combinational output calculation process.
   always_comb
