@@ -30,7 +30,7 @@ module aes_fsm (
       current_state <= AES_IDLE;
     else
       current_state <= next_state;
-      cycle_counter = cycle_counter + 1; // Increment cycle counter
+      cycle_counter <= cycle_counter + 1; // Increment cycle counter
   end
 
   // AES FSM: combinational next-state calculation process.
