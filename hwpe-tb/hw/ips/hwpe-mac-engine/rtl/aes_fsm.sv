@@ -24,25 +24,20 @@ module aes_fsm (
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq
-    if (~reset_n) begin
+    if (~reset_n)
       current_state <= AES_IDLE;
-    end
-    else if (clear) begin
+    else if (clear)
       current_state <= AES_IDLE;
-    end 
-    else begin
+    else 
       current_state <= next_state;
-    end 
   end
 
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq_cycle
-    if(current_state == AES_WORKING) begin 
-      cycle_counter <= cycle_counter + 1;
-    end 
-    else begin 
-      cycle_counter <= 0;
-    end 
+    if(current_state == AES_WORKING) 
+      cycle_counter <= cycle_counter + 1; 
+    else  
+      cycle_counter <= 0; 
   end 
 
 
