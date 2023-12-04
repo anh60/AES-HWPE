@@ -56,12 +56,12 @@ module aes_fsm (
       //WORKING -> FINISHED
       AES_WORKING: begin
 
-          next_state = AES_FINISHED;
+          //next_state = AES_FINISHED;
       end
 
       //FINSIHED -> IDLE
       AES_FINISHED: begin
-        next_state = AES_WORKING;
+        next_state = AES_IDLE;
       end
 
       // Default case to handle unexpected states
