@@ -24,17 +24,18 @@ module aes_fsm (
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq
-    if (~reset_n)
+    if (~reset_n) begin
       current_state <= AES_IDLE;
       cycle_counter <= 0;
-
-    else if (clear)
+    end
+    else if (clear) begin
       current_state <= AES_IDLE;
       cycle_counter <= 0;
-
-    else
+    end 
+    else begin
       current_state <= next_state;
       cycle_counter <= cycle_counter + 1;
+    end 
   end
 
   // AES FSM: combinational next-state calculation process.
