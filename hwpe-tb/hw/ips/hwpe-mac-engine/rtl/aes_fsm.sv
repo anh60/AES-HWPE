@@ -51,7 +51,7 @@ module aes_fsm (
         if (streamer_flags_i.plaintext_source_flags.ready_start
             && streamer_flags_i.chipertext_sink_flags.ready_start) begin 
           next_state = AES_WORKING;
-          cycle_counter = '0; // Reset cycle counter
+          cycle_counter <= 0; // Reset cycle counter
 
         end 
       end 
