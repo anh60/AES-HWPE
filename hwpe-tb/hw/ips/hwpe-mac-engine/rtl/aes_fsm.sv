@@ -62,7 +62,7 @@ module aes_fsm (
       //STARTING -> WORKING
       AES_STARTING: begin
         if (streamer_flags_i.plaintext_source_flags.ready_start
-            && streamer_flags_i.chipertext_sink_flags.ready_start) begin 
+            & streamer_flags_i.chipertext_sink_flags.ready_start) begin 
           next_state = AES_WORKING;
         end 
       end 
