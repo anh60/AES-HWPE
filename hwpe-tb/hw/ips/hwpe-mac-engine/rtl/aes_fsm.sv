@@ -69,17 +69,15 @@ module aes_fsm (
       
       //WORKING -> FINISHED
       AES_WORKING: begin
-        if (cycle_counter == 7) begin // Check if 8 cycles have passed
+                if (streamer_flags_i.plaintext_source_flags.ready_start
+            & streamer_flags_i.chipertext_sink_flags.ready_start)  begin // Check if 8 cycles have passed
           next_state = AES_FINISHED;
         end
       end
 
       //FINSIHED -> IDLE
       AES_FINISHED: begin
-        if (streamer_flags_i.plaintext_source_flags.ready_start
-            & streamer_flags_i.chipertext_sink_flags.ready_start) begin 
           next_state = AES_IDLE;
-        end 
       end
 
       // Default case to handle unexpected states
