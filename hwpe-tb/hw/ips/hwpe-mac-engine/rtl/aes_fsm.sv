@@ -37,17 +37,16 @@ module aes_fsm (
 
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq_cycle
-
-  if(current_state == AES_WORKING) begin 
+    if(current_state == AES_WORKING) begin 
       cycle_counter <= cycle_counter + 1;
-  end 
-  else begin 
+    end 
+    else begin 
       cycle_counter <= 0;
+    end 
   end 
 
 
 
-  end   
   always_comb
   begin : fsm_comb_next_state
     next_state = current_state;
@@ -125,7 +124,7 @@ module aes_fsm (
       end
 
       AES_FINISHED: begin 
-        ctrl_engine_o.enable  = '1;
+        ctrl_engine_o.enable  = '0;
         slave_ctrl_o.done = 1'b1;
       end 
     endcase
