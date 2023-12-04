@@ -16,7 +16,7 @@ module aes_fsm (
   input  ctrl_regfile_t       reg_file_i
 );
 
-    aes_state_t current_state, next_state;
+  aes_state_t current_state, next_state;
 
   ctrl_streamer_t streamer_ctrl_cfg;
   logic [2:0] cycle_counter;  // Counter to keep track of cycles in WORKING state
@@ -30,6 +30,7 @@ module aes_fsm (
       current_state <= AES_IDLE;
     else
       current_state <= next_state;
+      cycle_counter <= cycle_counter + 1; // Increment cycle counter
   end
 
   // AES FSM: combinational next-state calculation process.
@@ -42,7 +43,6 @@ module aes_fsm (
       AES_IDLE: begin
         if (slave_flags_i.start) begin
           next_state = AES_STARTING;
-          cycle_counter <= 0; // Reset cycle counter
         end
       end
       
@@ -51,12 +51,13 @@ module aes_fsm (
         if (streamer_flags_i.plaintext_source_flags.ready_start
             && streamer_flags_i.chipertext_sink_flags.ready_start) begin 
           next_state = AES_WORKING;
+          cycle_counter = '0; // Reset cycle counter
+
         end 
       end 
       
       //WORKING -> FINISHED
       AES_WORKING: begin
-        cycle_counter <= cycle_counter + 1; // Increment cycle counter
         if (cycle_counter == 8) // Check if 8 cycles have passed
           next_state = AES_FINISHED;
       end
