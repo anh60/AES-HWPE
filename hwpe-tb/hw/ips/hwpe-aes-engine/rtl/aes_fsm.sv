@@ -38,7 +38,7 @@ module aes_fsm (
       ctrl_engine_o.request_counter <= 0; 
     else if (clear) 
       ctrl_engine_o.request_counter <= 0;
-    else if(current_state == AES_WORKING || current_state == AES_IDLE)
+    else if(current_state == AES_WORKING || current_state == AES_STARTING)
       ctrl_engine_o.request_counter <= 0;
     else if(request_count_enable) 
       ctrl_engine_o.request_counter <= ctrl_engine_o.request_counter + 1;       
@@ -54,7 +54,7 @@ module aes_fsm (
       //IDLE -> STARTING
       AES_IDLE: begin
         if (slave_flags_i.start) begin
-          next_state = AES_REQUEST_DATA;
+          next_state = AES_STARTING;
         end
       end
       
