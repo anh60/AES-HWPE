@@ -34,7 +34,7 @@ module aes_fsm (
 
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq_cycle
-    if(ctrl_engine_o.enable == '1) 
+    if(ctrl_engine_o.enable == 1) 
       request_counter <= request_counter + 1; 
     else  
       request_counter <= 0; 
