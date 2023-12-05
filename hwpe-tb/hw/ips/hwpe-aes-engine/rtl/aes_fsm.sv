@@ -119,7 +119,6 @@ module aes_fsm (
       end
 
       AES_FINISHED: begin 
-        ctrl_engine_o.enable  = '1;
         slave_ctrl_o.done = 1'b1;
       end 
     endcase
