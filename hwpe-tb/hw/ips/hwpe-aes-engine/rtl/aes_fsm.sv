@@ -19,7 +19,7 @@ module aes_fsm (
   aes_state_t current_state, next_state;
 
   ctrl_streamer_t streamer_ctrl_cfg;
-  logic unsigned [2:0]  cycle_counter;  // Counter to keep track of cycles in WORKING state
+  logic unsigned [1:0]  request_counter;  // Counter to keep track of cycles in WORKING state
 
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
@@ -34,10 +34,10 @@ module aes_fsm (
 
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq_cycle
-    if(current_state == AES_WORKING) 
-      cycle_counter <= cycle_counter + 1; 
+    if(ctrl_engine_o.enable == '1) 
+      request_counter <= request_counter + 1; 
     else  
-      cycle_counter <= 0; 
+      request_counter <= 0; 
   end 
 
 
@@ -56,16 +56,24 @@ module aes_fsm (
       
       //STARTING -> WORKING
       AES_STARTING: begin
-        if (streamer_flags_i.plaintext_source_flags.ready_start
-            & streamer_flags_i.chipertext_sink_flags.ready_start) begin 
-          next_state = AES_WORKING;
-        end 
+          next_state = AES_REQUEST_DATA;
       end 
       
+      AES_REQUEST_DATA: begin
+        if (streamer_flags_i.plaintext_source_flags.ready_start)
+          next_state == AES_WORKING;
+          
+      end 
+
+
       //WORKING -> FINISHED
       AES_WORKING: begin
-         if (streamer_flags_i.plaintext_source_flags.done)
-          next_state = AES_FINISHED;
+         if (streamer_flags_i.plaintext_source_flags.done) begin
+            next_state = AES_REQUEST_DATA;
+            if(request_counter == 3)
+              next_state = AES_FINISHED;
+            
+         end
       end
 
       //FINSIHED -> IDLE
@@ -108,9 +116,11 @@ module aes_fsm (
         //Engine start
         ctrl_engine_o.start  = 1'b1;
         //Streamer request
-        //Should check if streamer is ready, and if not, should wait until ready...
-        streamer_ctrl_o.plaintext_source_ctrl.req_start = 1'b1;
-        streamer_ctrl_o.chipertext_sink_ctrl.req_start = 1'b1;
+        //streamer_ctrl_o.chipertext_sink_ctrl.req_start = 1'b1;
+      end 
+
+      AES_REQUEST_DATA: begin 
+          streamer_ctrl_o.plaintext_source_ctrl.req_start = 1'b1;
       end 
 
       AES_WORKING: begin 

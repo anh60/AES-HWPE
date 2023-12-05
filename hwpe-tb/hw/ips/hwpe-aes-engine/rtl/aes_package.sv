@@ -54,11 +54,12 @@ package aes_package;
   } flags_engine_t;
 
   // AES FSM states with explicit binary values. Helpfull when debugging.
-  typedef enum logic [1:0] { 
-      AES_IDLE      = 2'b00, 
-      AES_STARTING  = 2'b01,
-      AES_WORKING   = 2'b10, 
-      AES_FINISHED  = 2'b11 
+  typedef enum { 
+      AES_IDLE, 
+      AES_STARTING,
+      AES_REQUEST_DATA,
+      AES_WORKING, 
+      AES_FINISHED
   } aes_state_t;
 
 endpackage
