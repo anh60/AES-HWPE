@@ -12,11 +12,11 @@ packages:
       Path: ips/hwpe-ctrl
     dependencies:
     - tech_cells_generic
-  hwpe-mac-engine:
+  hwpe-aes-engine:
     revision: null
     version: null
     source:
-      Path: ips/hwpe-mac-engine
+      Path: ips/hwpe-aes-engine
     dependencies:
     - hwpe-ctrl
     - hwpe-stream

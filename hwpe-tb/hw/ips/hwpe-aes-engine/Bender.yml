@@ -1,5 +1,5 @@
 package:
-  name: hwpe-mac-engine
+  name: hwpe-aes-engine
   authors:
     - "Andreas Hølleland"
     - "Marcus Tjomsaas"
