@@ -114,6 +114,7 @@ module aes_fsm (
       end 
 
       AES_WORKING: begin 
+        ctrl_engine_o.enable  = '1;
       end
 
       AES_FINISHED: begin 
