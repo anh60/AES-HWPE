@@ -46,6 +46,7 @@ package aes_package;
     logic clear;
     logic enable;
     logic start;
+    logic [1:0] request_counter;
   } ctrl_engine_t; 
 
     typedef struct packed {

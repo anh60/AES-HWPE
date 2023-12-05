@@ -19,7 +19,6 @@ module aes_fsm (
   aes_state_t current_state, next_state;
 
   ctrl_streamer_t streamer_ctrl_cfg;
-  logic unsigned [1:0]  request_counter;  // Counter to keep track of cycles in WORKING state
 
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
@@ -39,7 +38,7 @@ module aes_fsm (
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq_cycle
     if(ctrl_engine_o.enable) 
-      request_counter <= request_counter + 1;       
+      ctrl_engine_o.request_counter <= ctrl_engine_o.request_counter + 1;       
   end 
 
 
@@ -72,7 +71,7 @@ module aes_fsm (
       AES_WORKING: begin
          if (streamer_flags_i.plaintext_source_flags.done) begin
             next_state = AES_REQUEST_DATA;
-            if(request_counter == 3)
+            if(ctrl_engine_o.request_counter == 3)
               next_state = AES_FINISHED;
             
          end
