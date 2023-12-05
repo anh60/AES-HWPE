@@ -34,7 +34,7 @@ module aes_fsm (
 
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq_cycle
-    if(ctrl_engine_o.enable == 1) 
+    if(ctrl_engine_o.enable) 
       request_counter <= request_counter + 1; 
     else  
       request_counter <= 0; 
@@ -61,7 +61,7 @@ module aes_fsm (
       
       AES_REQUEST_DATA: begin
         if (streamer_flags_i.plaintext_source_flags.ready_start)
-          next_state == AES_WORKING;
+          next_state = AES_WORKING;
           
       end 
 
