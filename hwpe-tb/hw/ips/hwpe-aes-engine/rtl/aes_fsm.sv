@@ -147,7 +147,7 @@ always_comb
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.line_length = 1;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.feat_stride = '0;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.feat_length = 1;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[0] + (ctrl_engine_o.request_counter*4);
+    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[0] + (ctrl_engine_o.request_counter);
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.feat_roll   = '0;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.loop_outer  = '0;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.realign_type = '0;
