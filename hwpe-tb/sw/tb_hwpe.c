@@ -51,7 +51,7 @@ int main()
     ;
 
   // job-dependent registers
-  hwpe_a_addr_set((unsigned int)a);
+  hwpe_a_addr_set((unsigned int)a[1]);
   hwpe_d_addr_set((unsigned int)d);
 
   // start hwpe operation
