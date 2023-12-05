@@ -35,7 +35,7 @@ module mac_engine
     d_o.strb  = '1; // strb is always '1 --> all bytes are considered valid
   end 
 
+assign a_i.ready = a_i.valid;
 
- 
 
 endmodule // mac_engine
