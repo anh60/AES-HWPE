@@ -24,13 +24,14 @@ module mac_engine
  
   always_ff @(posedge clk_i or negedge rst_ni)
   begin : data_mover
+  if(a_i.valid)
     data_reg <= a_i.data;
   end 
 
 
   always_comb
   begin
-    d_o.data = a_i.data;
+    d_o.data = data_reg;
     d_o.valid = ctrl_i.enable;
     d_o.strb  = '1; // strb is always '1 --> all bytes are considered valid
   end 
