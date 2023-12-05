@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-/* 
+/*
  * Authors:  Francesco Conti <fconti@iis.ee.ethz.ch>
  */
 
@@ -28,7 +28,8 @@
 #include "inc/hwpe_stimuli_c.h"
 #include "inc/hwpe_stimuli_d.h"
 
-int main() {
+int main()
+{
 
   uint8_t *a = stim_a;
   uint8_t *b = stim_b;
@@ -37,8 +38,8 @@ int main() {
 
   volatile int errors = 0;
   int gold_sum = 0, check_sum = 0;
-  int i,j;
-  
+  int i, j;
+
   int offload_id_tmp, offload_id;
 
   /* convolution-accumulation - HW */
@@ -46,43 +47,34 @@ int main() {
   // enable hwpe
   hwpe_cg_enable();
 
-  while((offload_id_tmp = hwpe_acquire_job()) < 0);
+  while ((offload_id_tmp = hwpe_acquire_job()) < 0)
+    ;
 
-  // set up bytecode
-  hwpe_bytecode_set(HWPE_LOOPS1_OFFS,           0x00000000);
-  hwpe_bytecode_set(HWPE_BYTECODE5_LOOPS0_OFFS, 0x00040000);
-  hwpe_bytecode_set(HWPE_BYTECODE4_OFFS,        0x00000000);
-  hwpe_bytecode_set(HWPE_BYTECODE3_OFFS,        0x00000000);
-  hwpe_bytecode_set(HWPE_BYTECODE2_OFFS,        0x00000000);
-  hwpe_bytecode_set(HWPE_BYTECODE1_OFFS,        0x000008cd);
-  hwpe_bytecode_set(HWPE_BYTECODE0_OFFS,        0x11a12c05);
-  
   // job-dependent registers
-  hwpe_a_addr_set((unsigned int) a);
-  hwpe_b_addr_set((unsigned int) b);
-  hwpe_c_addr_set((unsigned int) c);
-  hwpe_d_addr_set((unsigned int) d);
-  hwpe_nb_iter_set(4);
-  hwpe_len_iter_set(32-1);
-  hwpe_vectstride_set(32*4);
-  hwpe_shift_simplemul_set(hwpe_shift_simplemul_value(0, 0));
+  hwpe_a_addr_set((unsigned int)a + 4);
+  hwpe_d_addr_set((unsigned int)d);
 
   // start hwpe operation
   hwpe_trigger_job();
 
   // wait for end of computation
-  asm volatile ("wfi" ::: "memory");
+  asm volatile("wfi" ::: "memory");
 
   // disable hwpe
   hwpe_cg_disable();
-  
+
   // check
-  if(((uint32_t *) d)[0] != 0x7f228fd6) errors++;
-  if(((uint32_t *) d)[1] != 0x23a7d5c2) errors++;
-  if(((uint32_t *) d)[2] != 0x7f281848) errors++;
-  if(((uint32_t *) d)[3] != 0x6127d834) errors++;
+  if (((uint32_t *)d)[0] != 0x7f228fd6)
+    errors++;
+  if (((uint32_t *)d)[1] != 0x23a7d5c2)
+    errors++;
+  if (((uint32_t *)d)[2] != 0x7f281848)
+    errors++;
+  if (((uint32_t *)d)[3] != 0x6127d834)
+    errors++;
 
   // return errors
-  *(int *) 0x80000000 = errors;
+  *(int *)0x80000000 = errors;
+
   return errors;
 }

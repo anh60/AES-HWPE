@@ -13,7 +13,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-import mac_package::*;
+import aes_package::*;
 import hwpe_stream_package::*;
 
 module mac_streamer
@@ -97,8 +97,8 @@ module mac_streamer
     .clear_i            ( clear_i                ),
     .tcdm               ( tcdm_fifo_0            ), // this syntax is necessary for Verilator as hwpe_stream_source expects an array of interfaces
     .stream             ( a_prefifo.source       ),
-    .ctrl_i             ( ctrl_i.a_source_ctrl   ),
-    .flags_o            ( flags_o.a_source_flags ),
+    .ctrl_i             ( ctrl_i.plaintext_source_ctrl   ),
+    .flags_o            ( flags_o.plaintext_source_flags ),
     .tcdm_fifo_ready_o  ( a_tcdm_fifo_ready      )
   );
 
@@ -112,8 +112,8 @@ module mac_streamer
     .clear_i            ( clear_i                ),
     .tcdm               ( tcdm_fifo_1            ), // this syntax is necessary for Verilator as hwpe_stream_source expects an array of interfaces
     .stream             ( b_prefifo.source       ),
-    .ctrl_i             ( ctrl_i.b_source_ctrl   ),
-    .flags_o            ( flags_o.b_source_flags ),
+    .ctrl_i             (    ),
+    .flags_o            (  ),
     .tcdm_fifo_ready_o  ( b_tcdm_fifo_ready      )
   );
 
@@ -127,8 +127,8 @@ module mac_streamer
     .clear_i            ( clear_i                ),
     .tcdm               ( tcdm_fifo_2            ), // this syntax is necessary for Verilator as hwpe_stream_source expects an array of interfaces
     .stream             ( c_prefifo.source       ),
-    .ctrl_i             ( ctrl_i.c_source_ctrl   ),
-    .flags_o            ( flags_o.c_source_flags ),
+    .ctrl_i             (    ),
+    .flags_o            (  ),
     .tcdm_fifo_ready_o  ( c_tcdm_fifo_ready      )
   );
 
@@ -141,8 +141,8 @@ module mac_streamer
     .clear_i     ( clear_i              ),
     .tcdm        ( tcdm_fifo_3          ), // this syntax is necessary for Verilator as hwpe_stream_source expects an array of interfaces
     .stream      ( d_postfifo.sink      ),
-    .ctrl_i      ( ctrl_i.d_sink_ctrl   ),
-    .flags_o     ( flags_o.d_sink_flags )
+    .ctrl_i      ( ctrl_i.chipertext_sink_ctrl   ),
+    .flags_o     ( flags_o.chipertext_sink_flags )
   );
 
 

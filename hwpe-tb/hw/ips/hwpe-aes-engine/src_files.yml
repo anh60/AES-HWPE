@@ -1,0 +1,18 @@
+hw-aes-engine:
+  incdirs : [
+    rtl
+  ]
+  files : [
+    rtl/aes_package.sv,
+    rtl/aes_fsm.sv,
+    rtl/aes_ctrl.sv,
+    rtl/aes_streamer.sv,
+    rtl/aes_engine.sv,
+    rtl/aes_top.sv,
+    wrap/aes_top_wrap.sv
+  ]
+  vlog_opts : [
+    "-L hwpe_ctrl_lib",
+    "-L hwpe_stream_lib"
+  ]
+
