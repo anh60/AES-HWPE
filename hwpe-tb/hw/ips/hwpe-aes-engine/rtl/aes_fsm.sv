@@ -62,15 +62,38 @@ module aes_fsm (
       
       AES_REQUEST_DATA: begin
         if (streamer_flags_i.plaintext_source_flags.ready_start)
+          next_state = AES_REQUEST_DATA_WAIT;
+          
+      end 
+
+
+      //WORKING -> FINISHED
+      AES_REQUEST_DATA_WAIT: begin
+         if (streamer_flags_i.plaintext_source_flags.done) begin
+            next_state = AES_REQUEST_DATA;
+            if(ctrl_engine_o.request_counter == 3)
+              next_state = AES_WORKING;
+            
+         end
+      end
+
+      AES_WORKING: begin
+        //Wait for AES encryption here...
+        next_state = AES_SEND_DATA;
+      end 
+
+
+      AES_SEND_DATA: begin
+        if (streamer_flags_i.chipertext_source_flags.ready_start)
           next_state = AES_WORKING;
           
       end 
 
 
       //WORKING -> FINISHED
-      AES_WORKING: begin
-         if (streamer_flags_i.plaintext_source_flags.done) begin
-            next_state = AES_REQUEST_DATA;
+      AES_SEND_DATA_WAIT: begin
+         if (streamer_flags_i.chipertext_source_flags.done) begin
+            next_state = AES_SEND_DATA;
             if(ctrl_engine_o.request_counter == 3)
               next_state = AES_FINISHED;
             
@@ -117,17 +140,32 @@ module aes_fsm (
         //Engine start
         ctrl_engine_o.start  = 1'b1;
         //Streamer request
-        //streamer_ctrl_o.chipertext_sink_ctrl.req_start = 1'b1;
       end 
 
       AES_REQUEST_DATA: begin 
           streamer_ctrl_o.plaintext_source_ctrl.req_start = 1'b1;
       end 
 
-      AES_WORKING: begin 
+      AES_REQUEST_DATA_WAIT: begin 
         if (streamer_flags_i.plaintext_source_flags.done)
           ctrl_engine_o.enable  = '1;
       end
+
+      AES_WORKING: begin
+        //Do AES encryption....
+        ctrl_engine_o.request_counter = '0;
+      end
+
+      AES_SEND_DATA: begin 
+        streamer_ctrl_o.chipertext_sink_ctrl.req_start = 1'b1;
+      end 
+
+
+      AES_SEND_DATA_WAIT: begin 
+        if (streamer_flags_i.chipertext_source_flags.done)
+          ctrl_engine_o.enable  = '1;
+      end 
+
 
       AES_FINISHED: begin 
         slave_ctrl_o.done = 1'b1;
@@ -157,7 +195,7 @@ always_comb
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.line_length = 1;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.feat_stride = '0;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.feat_length = 1;
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[3];
+    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[3] + ($unsigned(ctrl_engine_o.request_counter) * 4);
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.feat_roll   = '0;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.loop_outer  = '0;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.realign_type = '0;

@@ -59,7 +59,10 @@ package aes_package;
       AES_IDLE, 
       AES_STARTING,
       AES_REQUEST_DATA,
-      AES_WORKING, 
+      AES_REQUEST_DATA_WAIT,
+      AES_WORKING,
+      AES_SEND_DATA,
+      AES_SEND_DATA_WAIT,
       AES_FINISHED
   } aes_state_t;
 
