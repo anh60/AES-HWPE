@@ -35,6 +35,4 @@ __attribute__((aligned(16))) uint8_t stim_d[] = {
     0x5d,
     0x6a,
     0x94,
-    0x44,
-    0x0e,
 };
