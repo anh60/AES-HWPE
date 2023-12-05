@@ -105,6 +105,7 @@ module aes_fsm (
 
       AES_STARTING: begin 
         //Engine start
+        ctrl_engine_o.enable  = '1;
         ctrl_engine_o.start  = 1'b1;
         //Streamer request
         //Should check if streamer is ready, and if not, should wait until ready...
@@ -113,7 +114,6 @@ module aes_fsm (
       end 
 
       AES_WORKING: begin 
-        ctrl_engine_o.enable  = '1;
       end
 
       AES_FINISHED: begin 
