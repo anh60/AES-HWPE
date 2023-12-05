@@ -58,9 +58,9 @@ int main() {
   hwpe_bytecode_set(HWPE_BYTECODE0_OFFS,        0x11a12c05);
   
   // job-dependent registers
-  hwpe_a_addr_set((unsigned int) a);
-  hwpe_b_addr_set((unsigned int) b);
-  hwpe_c_addr_set((unsigned int) c);
+  hwpe_plaintext_addr_set((unsigned int) a);
+  hwpe_chipertext_addr_set((unsigned int) b);
+  hwpe_num_blocks_set((unsigned int) c);
   hwpe_d_addr_set((unsigned int) d);
   hwpe_nb_iter_set(4);
   hwpe_len_iter_set(32-1);
