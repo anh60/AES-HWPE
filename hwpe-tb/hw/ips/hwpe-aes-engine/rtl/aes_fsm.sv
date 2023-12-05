@@ -163,8 +163,7 @@ module aes_fsm (
 
 
       AES_SEND_DATA_WAIT: begin 
-        if (streamer_flags_i.chipertext_sink_flags.done)
-          ctrl_engine_o.enable  = '1;
+        ctrl_engine_o.enable  = '1;
       end 
 
 
