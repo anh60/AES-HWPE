@@ -22,22 +22,22 @@ module aes_fsm (
 
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
-  begin : fsm_seq
-    if (~reset_n)begin 
+  begin : fsm_seq_state
+    if (~reset_n) 
       current_state <= AES_IDLE;
-      request_counter <= 0; 
-    end
-    else if (clear) begin 
+    else if (clear)  
       current_state <= AES_IDLE;
-      request_counter <= 0; 
-    end
     else 
       current_state <= next_state;
   end
 
   always_ff @(posedge clk or negedge reset_n)
-  begin : fsm_seq_cycle
-    if(ctrl_engine_o.enable) 
+  begin : fsm_seq_request_counter
+    if (~reset_n) 
+      ctrl_engine_o.request_counter <= 0; 
+    else if (clear) 
+      ctrl_engine_o.request_counter <= 0; 
+    else if(ctrl_engine_o.enable) 
       ctrl_engine_o.request_counter <= ctrl_engine_o.request_counter + 1;       
   end 
 
