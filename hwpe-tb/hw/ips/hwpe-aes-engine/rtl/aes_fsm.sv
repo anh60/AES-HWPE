@@ -125,7 +125,6 @@ module aes_fsm (
     ctrl_engine_o.clear   = '0;
     ctrl_engine_o.start   = '0;
     ctrl_engine_o.enable  = '0;
-    ctrl_engine_o.request_count_enable = '0;
 
 
     //Streamer
