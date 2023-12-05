@@ -94,9 +94,14 @@ module aes_fsm (
 
       //WORKING -> FINISHED
       AES_SEND_DATA_WAIT: begin
+        next_state = AES_MEMORY_WRITE_WAIT;
+            
+      end 
+
+      AES_MEMORY_WRITE_WAIT: begin 
         next_state = AES_SEND_DATA;
-            if(ctrl_engine_o.request_counter == 3)
-              next_state = AES_FINISHED;
+        if(ctrl_engine_o.request_counter == 3)
+          next_state = AES_FINISHED;
       end 
 
       //FINSIHED -> IDLE
@@ -171,6 +176,9 @@ module aes_fsm (
 
       end 
 
+      AES_MEMORY_WRITE_WAIT: begin 
+
+      end 
 
       AES_FINISHED: begin 
         slave_ctrl_o.done = 1'b1;

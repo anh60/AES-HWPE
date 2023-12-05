@@ -64,6 +64,7 @@ package aes_package;
       AES_WORKING,
       AES_SEND_DATA,
       AES_SEND_DATA_WAIT,
+      AES_MEMORY_WRITE_WAIT,
       AES_FINISHED
   } aes_state_t;
 
