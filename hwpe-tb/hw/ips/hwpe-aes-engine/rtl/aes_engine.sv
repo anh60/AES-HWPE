@@ -38,9 +38,6 @@ module mac_engine
 
   always_comb
   begin
-    if(~ctrl_i.enable)
-      d_o.data ='0;
-
     if(ctrl_i.request_counter == 0)
       d_o.data = data_reg[31:0];
     else if(ctrl_i.request_counter == 1)
@@ -50,7 +47,7 @@ module mac_engine
     else if(ctrl_i.request_counter == 3)
       d_o.data = data_reg[127:96];
 
-    d_o.valid = ctrl_i.enable;
+    d_o.valid = ctrl_i.data_out_valid;
     d_o.strb  = '1; // strb is always '1 --> all bytes are considered valid
   end 
 

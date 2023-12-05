@@ -19,6 +19,7 @@ module aes_fsm (
   aes_state_t current_state, next_state;
 
   ctrl_streamer_t streamer_ctrl_cfg;
+  logic request_count_enable = '0;
 
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
@@ -39,7 +40,7 @@ module aes_fsm (
       ctrl_engine_o.request_counter <= 0;
     else if(current_state == AES_WORKING || current_state == AES_IDLE)
       ctrl_engine_o.request_counter <= 0;
-    else if(ctrl_engine_o.enable) 
+    else if(request_count_enable) 
       ctrl_engine_o.request_counter <= ctrl_engine_o.request_counter + 1;       
   end 
 
@@ -73,6 +74,7 @@ module aes_fsm (
       AES_REQUEST_DATA_WAIT: begin
          if (streamer_flags_i.plaintext_source_flags.done) begin
             next_state = AES_REQUEST_DATA;
+            
             if(ctrl_engine_o.request_counter == 3)
               next_state = AES_WORKING;
             
@@ -115,6 +117,10 @@ module aes_fsm (
   // AES FSM: combinational output calculation process.
   always_comb
   begin : fsm_comb_out
+
+    //fsm 
+    request_count_enable = '0;
+
     // engine
     ctrl_engine_o.clear   = '0;
     ctrl_engine_o.start   = '0;
@@ -146,8 +152,8 @@ module aes_fsm (
       end 
 
       AES_REQUEST_DATA_WAIT: begin 
-       // if (streamer_flags_i.plaintext_source_flags.done) 
-         // ctrl_engine_o.enable  = '1;
+        if (streamer_flags_i.plaintext_source_flags.done) 
+            request_count_enable = '1;
       end
 
       AES_WORKING: begin
@@ -160,7 +166,9 @@ module aes_fsm (
 
 
       AES_SEND_DATA_WAIT: begin 
-        ctrl_engine_o.enable  = '1;
+        ctrl_engine_o.data_out_valid  = '1;
+        request_count_enable = '1;
+
       end 
 
 
