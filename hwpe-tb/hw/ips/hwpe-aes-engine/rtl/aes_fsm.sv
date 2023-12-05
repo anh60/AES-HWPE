@@ -94,8 +94,7 @@ module aes_fsm (
 
       //WORKING -> FINISHED
       AES_SEND_DATA_WAIT: begin
-        if (streamer_flags_i.chipertext_sink_flags.ready_start)
-          next_state = AES_MEMORY_WRITE_WAIT;
+        next_state = AES_MEMORY_WRITE_WAIT;
             
       end 
 
@@ -177,7 +176,6 @@ module aes_fsm (
       end 
 
       AES_MEMORY_WRITE_WAIT: begin 
-        if (streamer_flags_i.plaintext_source_flags.done) 
           request_count_enable = '1; 
       end 
 
