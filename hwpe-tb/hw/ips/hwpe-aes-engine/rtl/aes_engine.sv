@@ -37,7 +37,10 @@ module mac_engine
 
 
   always_comb
-  begin 
+  begin
+    if(~ctrl_i.enable)
+      d_o.data ='0;
+
     if(ctrl_i.request_counter == 0)
       d_o.data = data_reg[31:0];
     else if(ctrl_i.request_counter == 1)
