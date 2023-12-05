@@ -64,9 +64,9 @@ module aes_fsm (
       
       //WORKING -> FINISHED
       AES_WORKING: begin
-        if (cycle_counter == 7) begin // Check if 8 cycles have passed
+        //if (cycle_counter == 7) begin // Check if 8 cycles have passed
           next_state = AES_FINISHED;
-        end
+        //end
       end
 
       //FINSIHED -> IDLE
@@ -134,7 +134,7 @@ always_comb
     streamer_ctrl_cfg = '0;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.trans_size  = 1;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.line_stride = '0;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.line_length = 8;
+    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.line_length = 1;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.feat_stride = '0;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.feat_length = 1;
     streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[0];
@@ -144,7 +144,7 @@ always_comb
     // Chipertext stream 
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.trans_size  = 1;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.line_stride = '0;
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.line_length = 8;
+    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.line_length = 1;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.feat_stride = '0;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.feat_length = 1;
     streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[3];
