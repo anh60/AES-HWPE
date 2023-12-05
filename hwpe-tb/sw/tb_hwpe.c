@@ -23,22 +23,16 @@
 #include "hal_hwpe.h"
 #include "tinyprintf.h"
 
-#include "inc/hwpe_stimuli_a.h"
-#include "inc/hwpe_stimuli_b.h"
-#include "inc/hwpe_stimuli_c.h"
-#include "inc/hwpe_stimuli_d.h"
+#include "inc/hwpe_stimuli_chipertext.h"
+#include "inc/hwpe_stimuli_plaintext.h"
 
 int main()
 {
 
-  uint8_t *a = stim_a;
-  uint8_t *b = stim_b;
-  uint8_t *c = stim_c;
-  uint8_t *d = stim_d;
+  uint8_t *chipertext = stim_chipertext;
+  uint8_t *plaintext = stim_plaintext;
 
   volatile int errors = 0;
-  int gold_sum = 0, check_sum = 0;
-  int i, j;
 
   int offload_id_tmp, offload_id;
 
@@ -51,26 +45,27 @@ int main()
     ;
 
   // job-dependent registers
-  hwpe_a_addr_set((unsigned int)a);
-  hwpe_d_addr_set((unsigned int)d);
+  hwpe_plaintext_addr_set((unsigned int)plaintext);
+  hwpe_d_addr_set((unsigned int)chipertext);
 
   // start hwpe operation
   hwpe_trigger_job();
 
   // wait for end of computation
+  // Sleeps until the HWPE interrupts with a hwpe.done flag.
   asm volatile("wfi" ::: "memory");
 
   // disable hwpe
   hwpe_cg_disable();
 
   // check
-  if (((uint32_t *)d)[0] != 0x7f228fd6)
+  if (((uint32_t *)chipertext)[0] != 0x7f228fd6)
     errors++;
-  if (((uint32_t *)d)[1] != 0x23a7d5c2)
+  if (((uint32_t *)chipertext)[1] != 0x23a7d5c2)
     errors++;
-  if (((uint32_t *)d)[2] != 0x7f281848)
+  if (((uint32_t *)chipertext)[2] != 0x7f281848)
     errors++;
-  if (((uint32_t *)d)[3] != 0x6127d834)
+  if (((uint32_t *)chipertext)[3] != 0x6127d834)
     errors++;
 
   // return errors

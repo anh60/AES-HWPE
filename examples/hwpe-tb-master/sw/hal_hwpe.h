@@ -77,15 +77,15 @@ static inline void hwpe_bytecode_set(unsigned int offs, unsigned int value) {
   HWPE_WRITE(value, HWPE_BYTECODE+offs);
 }
 
-static inline void hwpe_a_addr_set(unsigned int value) {
+static inline void hwpe_plaintext_addr_set(unsigned int value) {
   HWPE_WRITE(value, HWPE_A_ADDR);
 }
 
-static inline void hwpe_b_addr_set(unsigned int value) {
+static inline void hwpe_chipertext_addr_set(unsigned int value) {
   HWPE_WRITE(value, HWPE_B_ADDR);
 }
 
-static inline void hwpe_c_addr_set(unsigned int value) {
+static inline void hwpe_num_blocks_set(unsigned int value) {
   HWPE_WRITE(value, HWPE_C_ADDR);
 }
 
