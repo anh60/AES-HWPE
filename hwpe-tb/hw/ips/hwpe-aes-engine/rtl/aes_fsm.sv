@@ -125,6 +125,7 @@ module aes_fsm (
     ctrl_engine_o.clear   = '0;
     ctrl_engine_o.start   = '0;
     ctrl_engine_o.enable  = '0;
+    ctrl_engine_o.request_count_enable = '0;
 
 
     //Streamer
@@ -166,7 +167,7 @@ module aes_fsm (
 
 
       AES_SEND_DATA_WAIT: begin 
-        ctrl_engine_o.data_out_valid  = '1;
+        ctrl_engine_o.data_out_valid = '1;
         request_count_enable = '1;
 
       end 
