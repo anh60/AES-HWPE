@@ -162,12 +162,13 @@ module aes_fsm (
 
       AES_SEND_DATA: begin 
         streamer_ctrl_o.chipertext_sink_ctrl.req_start = 1'b1;
-        request_count_enable = '1; 
       end 
 
 
       AES_SEND_DATA_WAIT: begin 
         ctrl_engine_o.data_out_valid = '1;
+        request_count_enable = '1; 
+
       end 
 
 
