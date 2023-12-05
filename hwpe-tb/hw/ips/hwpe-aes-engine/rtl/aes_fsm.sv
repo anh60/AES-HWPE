@@ -94,17 +94,15 @@ module aes_fsm (
 
       //WORKING -> FINISHED
       AES_SEND_DATA_WAIT: begin
-        next_state = AES_MEMORY_WRITE_WAIT;
+        if (streamer_flags_i.chipertext_sink_flags.ready_start)
+          next_state = AES_MEMORY_WRITE_WAIT;
             
       end 
 
       AES_MEMORY_WRITE_WAIT: begin
-        if (streamer_flags_i.chipertext_sink_flags.ready_start) begin 
           next_state = AES_SEND_DATA;
           if(ctrl_engine_o.request_counter == 3)
             next_state = AES_FINISHED;
-
-        end 
       end 
 
       //FINSIHED -> IDLE
@@ -174,13 +172,13 @@ module aes_fsm (
 
 
       AES_SEND_DATA_WAIT: begin 
-        ctrl_engine_o.data_out_valid = '1;
-        request_count_enable = '1; 
+          ctrl_engine_o.data_out_valid = '1;
 
       end 
 
       AES_MEMORY_WRITE_WAIT: begin 
-
+        if (streamer_flags_i.plaintext_source_flags.done) 
+          request_count_enable = '1; 
       end 
 
       AES_FINISHED: begin 
