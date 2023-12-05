@@ -26,8 +26,10 @@ module aes_fsm (
   begin : fsm_seq
     if (~reset_n)
       current_state <= AES_IDLE;
+      request_counter <= 0; 
     else if (clear)
       current_state <= AES_IDLE;
+      request_counter <= 0; 
     else 
       current_state <= next_state;
   end
@@ -35,9 +37,7 @@ module aes_fsm (
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq_cycle
     if(ctrl_engine_o.enable) 
-      request_counter <= request_counter + 1; 
-    else  
-      request_counter <= 0; 
+      request_counter <= request_counter + 1;       
   end 
 
 
