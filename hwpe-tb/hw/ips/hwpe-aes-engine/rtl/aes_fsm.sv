@@ -87,7 +87,7 @@ module aes_fsm (
 
       AES_SEND_DATA: begin
         if (streamer_flags_i.chipertext_sink_flags.ready_start)
-          next_state = AES_WORKING;
+          next_state = AES_SEND_DATA_WAIT;
           
       end 
 
