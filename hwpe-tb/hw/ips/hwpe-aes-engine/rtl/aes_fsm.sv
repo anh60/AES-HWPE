@@ -36,7 +36,9 @@ module aes_fsm (
     if (~reset_n) 
       ctrl_engine_o.request_counter <= 0; 
     else if (clear) 
-      ctrl_engine_o.request_counter <= 0; 
+      ctrl_engine_o.request_counter <= 0;
+    else if(current_state == AES_WORKING || current_state == AES_IDLE)
+      ctrl_engine_o.request_counter <= 0;
     else if(ctrl_engine_o.enable) 
       ctrl_engine_o.request_counter <= ctrl_engine_o.request_counter + 1;       
   end 
@@ -84,7 +86,7 @@ module aes_fsm (
 
 
       AES_SEND_DATA: begin
-        if (streamer_flags_i.chipertext_source_flags.ready_start)
+        if (streamer_flags_i.chipertext_sink_flags.ready_start)
           next_state = AES_WORKING;
           
       end 
@@ -92,7 +94,7 @@ module aes_fsm (
 
       //WORKING -> FINISHED
       AES_SEND_DATA_WAIT: begin
-         if (streamer_flags_i.chipertext_source_flags.done) begin
+         if (streamer_flags_i.chipertext_sink_flags.done) begin
             next_state = AES_SEND_DATA;
             if(ctrl_engine_o.request_counter == 3)
               next_state = AES_FINISHED;
@@ -153,7 +155,6 @@ module aes_fsm (
 
       AES_WORKING: begin
         //Do AES encryption....
-        ctrl_engine_o.request_counter = '0;
       end
 
       AES_SEND_DATA: begin 
