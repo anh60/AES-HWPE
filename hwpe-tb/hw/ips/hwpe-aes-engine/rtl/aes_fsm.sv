@@ -35,8 +35,6 @@ module aes_fsm (
   always_ff @(posedge clk or negedge reset_n)
   begin : fsm_seq_request_counter
     if (~reset_n) 
-      ctrl_engine_o.request_counter <= 0; 
-    else if (clear) 
       ctrl_engine_o.request_counter <= 0;
     else if(current_state == AES_WORKING || current_state == AES_STARTING)
       ctrl_engine_o.request_counter <= 0;
