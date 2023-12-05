@@ -95,12 +95,8 @@ module aes_fsm (
       //WORKING -> FINISHED
       AES_SEND_DATA_WAIT: begin
         next_state = AES_SEND_DATA;
-            if(ctrl_engine_o.request_counter == 3)begin 
-              if(streamer_flags_i.chipertext_sink_flags.done)
-                next_state = AES_FINISHED;
-              else 
-                next_state = AES_SEND_DATA_WAIT;
-            end 
+            if(ctrl_engine_o.request_counter == 3)
+              next_state = AES_FINISHED;
       end 
 
       //FINSIHED -> IDLE
@@ -171,7 +167,8 @@ module aes_fsm (
 
       AES_SEND_DATA_WAIT: begin 
         ctrl_engine_o.data_out_valid = '1;
-        request_count_enable = '1;
+        if(ctrl_engine_o.request_counter != 3) //DO NOT COUNT TO 4!!!
+          request_count_enable = '1; 
 
       end 
 
