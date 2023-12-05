@@ -25,13 +25,13 @@ module mac_engine
   always_ff @(posedge clk_i or negedge rst_ni)
   begin : data_mover
     if(a_i.valid)
-      if(ctrl_engine_o.request_counter == 0)
+      if(ctrl_i.request_counter == 0)
         data_reg[31:0] <= a_i.data;
-      else if(ctrl_engine_o.request_counter == 1)
+      else if(ctrl_i.request_counter == 1)
         data_reg[63:32] <= a_i.data;
-      else if(ctrl_engine_o.request_counter == 2)
+      else if(ctrl_i.request_counter == 2)
         data_reg[95:64] <= a_i.data;
-      else if(ctrl_engine_o.request_counter == 3)
+      else if(ctrl_i.request_counter == 3)
         data_reg[127:96] <= a_i.data;
   end 
 
