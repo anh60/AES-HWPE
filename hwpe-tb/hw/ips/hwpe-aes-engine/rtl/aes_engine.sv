@@ -19,7 +19,7 @@ module mac_engine
   output flags_engine_t          flags_o
 );
 
-  logic unsigned [127:0]  data_reg;
+  logic unsigned [127:0]  data_reg = '0;
 
  
   always_ff @(posedge clk_i or negedge rst_ni)
