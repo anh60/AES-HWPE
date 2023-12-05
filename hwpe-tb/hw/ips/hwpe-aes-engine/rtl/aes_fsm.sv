@@ -53,7 +53,7 @@ module aes_fsm (
       //IDLE -> STARTING
       AES_IDLE: begin
         if (slave_flags_i.start) begin
-          next_state = AES_STARTING;
+          next_state = AES_REQUEST_DATA;
         end
       end
       
