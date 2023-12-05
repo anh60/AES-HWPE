@@ -64,10 +64,7 @@ module aes_fsm (
       
       //WORKING -> FINISHED
       AES_WORKING: begin
-        if (streamer_flags_i.plaintext_source_flags.ready_start
-            & streamer_flags_i.chipertext_sink_flags.ready_start) begin 
           next_state = AES_FINISHED;
-        end
       end
 
       //FINSIHED -> IDLE
@@ -116,6 +113,7 @@ module aes_fsm (
       end 
 
       AES_WORKING: begin 
+        ctrl_engine_o.enable  = '1;
       end
 
       AES_FINISHED: begin 
