@@ -149,8 +149,8 @@ module aes_fsm (
       end 
 
       AES_REQUEST_DATA_WAIT: begin 
-        //if (streamer_flags_i.plaintext_source_flags.done)
-          //ctrl_engine_o.enable  = '1;
+        if (streamer_flags_i.plaintext_source_flags.done)
+          ctrl_engine_o.enable  = '1;
       end
 
       AES_WORKING: begin
