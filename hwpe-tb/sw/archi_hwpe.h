@@ -43,6 +43,13 @@
 
 #define HWPE_INPUT_ADDR 0x40
 #define HWPE_OUTPUT_ADDR 0x44
-#define HWPE_NUM_BLOCKS 0x48
+#define HWPE_KEY_255_224 0x48
+#define HWPE_KEY_223_192 0x4B
+#define HWPE_KEY_191_160 0x50
+#define HWPE_KEY_159_128 0x54
+#define HWPE_KEY_127_96 0x58
+#define HWPE_KEY_95_64 0x5B
+#define HWPE_KEY_63_32 0x60
+#define HWPE_KEY_31_0 0x64
 
 #endif

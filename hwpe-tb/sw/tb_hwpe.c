@@ -26,17 +26,23 @@
 #include "aes_hwpe.c"
 #include "archi_hwpe.h"
 #include "hal_hwpe.h"
+
+#define KEY_BIT_LENGTH 256
+uint32_t key[KEY_BIT_LENGTH / 32] = {1, 2, 3, 4, 5, 6, 7, 8};
+
 int main()
 {
   volatile int errors = 0;
 
-  uint8_t *input = stim_plaintext;
-  uint8_t *output = stim_chipertext;
+  uint8_t *input_addr = stim_plaintext;
+  uint8_t *output_addr = stim_chipertext;
 
   aes_hwpe_init();
 
   // job-dependent registers
-  aes_hwpe_configure(input, output);
+  aes_hwpe_configure(input_addr, output_addr, KEY_BIT_LENGTH / 32);
+
+  aes_hwpe_key_set(key);
 
   // BLOCKING FUNCTION!
   aes_hwpe_start();
