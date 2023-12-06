@@ -23,9 +23,18 @@
  * ================================================================================
  *  # reg |  offset  |  bits   |   bitmask    ||  content
  * -------+----------+---------+--------------++-----------------------------------
- *     0  |  0x0040  |  31: 0  |  0xffffffff  ||  PLAINTEXT_ADDR
- *     1  |  0x0044  |  31: 0  |  0xffffffff  ||  CHIPERTEXT_ADDR
- *     2  |  0x0048  |  31: 0  |  0xffffffff  ||  NUM_BLOCKS
+ *     0  |  0x0040  |  31: 0  |  0xffffffff  ||  INPUT_ADDR
+ *     1  |  0x0044  |  31: 0  |  0xffffffff  ||  OUTPUT_ADDR
+ *     2  |  0x0048  |  31: 0  |  0xffffffff  ||  KEY_255_224
+ *     3  |  0x004b  |  31: 0  |  0xffffffff  ||  KEY_223_192
+ *     4  |  0x0050  |  31: 0  |  0xffffffff  ||  KEY_191_160
+ *     5  |  0x0054  |  31: 0  |  0xffffffff  ||  KEY_159_128
+ *     6  |  0x0058  |  31: 0  |  0xffffffff  ||  KEY_127_96
+ *     7  |  0x005b  |  31: 0  |  0xffffffff  ||  KEY_95_64
+ *     8  |  0x0060  |  31: 0  |  0xffffffff  ||  KEY_63_32
+ *     9  |  0x0064  |  31: 0  |  0xffffffff  ||  KEY_31_0
+
+ *
  * ================================================================================
  *
  */
@@ -41,19 +50,27 @@
 #define HWPE_WRITE(value, offset) *(int *)(ARCHI_HWPE_ADDR_BASE + offset) = value
 #define HWPE_READ(offset) *(int *)(ARCHI_HWPE_ADDR_BASE + offset)
 
-static inline void hwpe_plaintext_addr_set(unsigned int value)
+static inline void hwpe_input_addr_set(unsigned int value)
 {
-  HWPE_WRITE(value, HWPE_PLAINTEXT_ADDR);
+  HWPE_WRITE(value, HWPE_INPUT_ADDR);
 }
 
-static inline void hwpe_chipertext_addr_set(unsigned int value)
+static inline void hwpe_output_addr_set(unsigned int value)
 {
-  HWPE_WRITE(value, HWPE_CHIPERTEXT_ADDR);
+  HWPE_WRITE(value, HWPE_OUTPUT_ADDR);
 }
 
-static inline void hwpe_num_blocks_set(unsigned int value)
+static inline void hwpe_key_set(uint32_t *value)
 {
-  HWPE_WRITE(value, HWPE_NUM_BLOCKS);
+
+  HWPE_WRITE(value[7], HWPE_KEY_255_224);
+  HWPE_WRITE(value[6], HWPE_KEY_223_192);
+  HWPE_WRITE(value[5], HWPE_KEY_191_160);
+  HWPE_WRITE(value[4], HWPE_KEY_159_128);
+  HWPE_WRITE(value[3], HWPE_KEY_127_96);
+  HWPE_WRITE(value[2], HWPE_KEY_95_64);
+  HWPE_WRITE(value[1], HWPE_KEY_63_32);
+  HWPE_WRITE(value[0], HWPE_KEY_31_0);
 }
 
 static inline void hwpe_trigger_job()

@@ -19,54 +19,47 @@
  */
 
 #include <stdint.h>
-#include "archi_hwpe.h"
-#include "hal_hwpe.h"
-#include "tinyprintf.h"
-
+// #include "aes_hwpe.h"
 #include "inc/hwpe_stimuli_chipertext.h"
 #include "inc/hwpe_stimuli_plaintext.h"
 
+#include "aes_hwpe.c"
+#include "archi_hwpe.h"
+#include "hal_hwpe.h"
+
+#define KEY_BIT_LENGTH 256
+uint32_t key[KEY_BIT_LENGTH / 32] = {1, 2, 3, 4, 5, 6, 7, 8};
+
 int main()
 {
-
-  uint8_t *chipertext = stim_chipertext;
-  uint8_t *plaintext = stim_plaintext;
-
   volatile int errors = 0;
 
-  int offload_id_tmp, offload_id;
+  uint8_t *input_addr = stim_plaintext;
+  uint8_t *output_addr = stim_chipertext;
 
-  /* convolution-accumulation - HW */
-
-  // enable hwpe
-  hwpe_cg_enable();
-
-  while ((offload_id_tmp = hwpe_acquire_job()) < 0)
-    ;
+  aes_hwpe_init();
 
   // job-dependent registers
-  hwpe_plaintext_addr_set((unsigned int)plaintext);
-  hwpe_d_addr_set((unsigned int)chipertext);
+  aes_hwpe_configure(input_addr, output_addr, KEY_BIT_LENGTH / 32);
 
-  // start hwpe operation
-  hwpe_trigger_job();
+  aes_hwpe_key_set(key);
+
+  // BLOCKING FUNCTION!
+  aes_hwpe_start();
 
   // wait for end of computation
   // Sleeps until the HWPE interrupts with a hwpe.done flag.
   asm volatile("wfi" ::: "memory");
 
-  // disable hwpe
-  hwpe_cg_disable();
+  aes_hwpe_start();
 
-  // check
-  if (((uint32_t *)chipertext)[0] != 0x7f228fd6)
-    errors++;
-  if (((uint32_t *)chipertext)[1] != 0x23a7d5c2)
-    errors++;
-  if (((uint32_t *)chipertext)[2] != 0x7f281848)
-    errors++;
-  if (((uint32_t *)chipertext)[3] != 0x6127d834)
-    errors++;
+  asm volatile("wfi" ::: "memory");
+
+  aes_hwpe_start();
+
+  asm volatile("wfi" ::: "memory");
+
+  aes_hwpe_deinit();
 
   // return errors
   *(int *)0x80000000 = errors;
