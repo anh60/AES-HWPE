@@ -15,6 +15,7 @@ void aes_hwpe_configure(uint8_t *input, uint8_t *output)
 
 void aes_hwpe_start(void)
 {
+
     while (hwpe_acquire_job() < 0)
         ;
 
@@ -22,10 +23,6 @@ void aes_hwpe_start(void)
     hwpe_trigger_job();
 
     return;
-}
-
-void aes_hwpe_aquire_job()
-{
 }
 
 void aes_hwpe_init(void)
