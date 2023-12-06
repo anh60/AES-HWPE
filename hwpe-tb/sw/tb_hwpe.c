@@ -23,6 +23,7 @@
 #include "inc/hwpe_stimuli_chipertext.h"
 #include "inc/hwpe_stimuli_plaintext.h"
 
+#include "aes_hwpe.c"
 int main()
 {
 
