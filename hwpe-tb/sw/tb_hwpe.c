@@ -20,7 +20,6 @@
 
 #include <stdint.h>
 #include "aes_hwpe.h"
-
 #include "inc/hwpe_stimuli_chipertext.h"
 #include "inc/hwpe_stimuli_plaintext.h"
 
