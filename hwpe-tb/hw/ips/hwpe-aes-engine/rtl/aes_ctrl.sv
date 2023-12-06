@@ -1,22 +1,13 @@
-/* 
- * mac_ctrl.sv
- * Francesco Conti <fconti@iis.ee.ethz.ch>
+/*
+ * aes_ctrl.sv
+ * Andreas Holleland, Marcus Alexander Tjomsaas
  *
- * Copyright (C) 2018 ETH Zurich, University of Bologna
- * Copyright and related rights are licensed under the Solderpad Hardware
- * License, Version 0.51 (the "License"); you may not use this file except in
- * compliance with the License.  You may obtain a copy of the License at
- * http://solderpad.org/licenses/SHL-0.51. Unless required by applicable law
- * or agreed to in writing, software, hardware and materials distributed under
- * this License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
  */
 
 import aes_package::*;
 import hwpe_ctrl_package::*;
 
-module mac_ctrl
+module aes_ctrl
 #(
   parameter int unsigned N_CORES         = 2,
   parameter int unsigned N_CONTEXT       = 2,
@@ -30,13 +21,16 @@ module mac_ctrl
   input  logic                                  rst_ni,
   input  logic                                  test_mode_i,
   output logic                                  clear_o,
+
   // events
   output logic [N_CORES-1:0][REGFILE_N_EVT-1:0] evt_o,
+
   // ctrl & flags
   output ctrl_streamer_t                        ctrl_streamer_o,
   input  flags_streamer_t                       flags_streamer_i,
   output ctrl_engine_t                          ctrl_engine_o,
   input  flags_engine_t                         flags_engine_i,
+
   // periph slave port
   hwpe_ctrl_intf_periph.slave                   periph
 );
@@ -63,6 +57,7 @@ module mac_ctrl
     .flags_o  ( slave_flags ),
     .reg_file ( reg_file    )
   );
+
   assign evt_o = slave_flags.evt;
 
   /* Main FSM */
@@ -79,4 +74,4 @@ module mac_ctrl
     .reg_file_i    (reg_file         )
   );
 
-endmodule // mac_ctrl
+endmodule

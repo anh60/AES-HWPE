@@ -1,3 +1,9 @@
+/*
+ * aes_fsm.sv
+ * Andreas Holleland, Marcus Alexander Tjomsaas
+ *
+ */
+
 import aes_package::*;
 import hwpe_ctrl_package::*;
 

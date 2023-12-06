@@ -1,27 +1,33 @@
+/*
+ * aes_engine.sv
+ * Andreas Holleland, Marcus Alexander Tjomsaas
+ *
+ */
+
 import aes_package::*;
 
-module mac_engine
+module aes_engine
 (
-  // global signals
+  // Global signals
   input  logic                   clk_i,
   input  logic                   rst_ni,
   input  logic                   test_mode_i,
-  // input a stream
+
+  // Input stream
   hwpe_stream_intf_stream.sink   a_i,
-  // input b stream
-  hwpe_stream_intf_stream.sink   b_i,
-  // input c stream
-  hwpe_stream_intf_stream.sink   c_i,
-  // output d stream
+
+  // Output stream
   hwpe_stream_intf_stream.source d_o,
-  // control channel
+
+  // Control channel
   input  ctrl_engine_t           ctrl_i,
   output flags_engine_t          flags_o
 );
-
+  
+  // Data (output/result) register
   logic unsigned [127:0]  data_reg = '0;
 
- 
+  // Set data register
   always_ff @(posedge clk_i or negedge rst_ni)
   begin : data_mover
     if(a_i.valid)
@@ -35,7 +41,7 @@ module mac_engine
         data_reg[127:96] <= a_i.data;
   end 
 
-
+  // Stream data out
   always_comb
   begin
     if(ctrl_i.request_counter == 0)
@@ -54,4 +60,4 @@ module mac_engine
 assign a_i.ready = a_i.valid;
 
 
-endmodule // mac_engine
+endmodule

@@ -144,7 +144,7 @@ module sim_hwpe #(
     assign data_rvalid = periph_r_valid | stack[0].r_valid | tcdm[4].r_valid;
   endgenerate
 
-  mac_top_wrap #(
+  aes_top_wrap #(
     .N_CORES          ( NC ),
     .MP               ( MP ),
     .ID               ( ID )
