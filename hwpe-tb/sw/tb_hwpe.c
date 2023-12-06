@@ -30,7 +30,7 @@ int main()
   uint8_t *input = stim_plaintext;
   uint8_t *output = stim_chipertext;
 
-  /*aes_hwpe_init();
+  aes_hwpe_init();
 
   aes_hwpe_configure(input, output);
 
@@ -42,6 +42,6 @@ int main()
   asm volatile("wfi" ::: "memory");
 
   aes_hwpe_deinit();
-*/
+
   return 0;
 }
