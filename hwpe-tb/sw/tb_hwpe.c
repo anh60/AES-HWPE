@@ -24,6 +24,8 @@
 #include "inc/hwpe_stimuli_plaintext.h"
 
 #include "aes_hwpe.c"
+#include "archi_hwpe.h"
+#include "hal_hwpe.h"
 int main()
 {
 
