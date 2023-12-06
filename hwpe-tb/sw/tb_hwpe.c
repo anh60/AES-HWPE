@@ -39,8 +39,7 @@ int main()
   aes_hwpe_configure(input, output);
 
   // BLOCKING FUNCTION!
-  aes_hwpe_aquire_job();
-
+  aes_hwpe_start();
   aes_hwpe_start();
 
   // wait for end of computation
