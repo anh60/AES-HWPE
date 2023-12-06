@@ -1,21 +1,5 @@
 /*
- * Copyright (C) 2018-2019 ETH Zurich and University of Bologna
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/* 
- * Authors:  Francesco Conti <fconti@iis.ee.ethz.ch>
+ * Authors:  Andreas Hølleland, Marcus Alexander Tjomsaas
  */
 
 #ifndef __HAL_HWPE_H__
@@ -32,32 +16,25 @@
  *     3  |  0x000c  |  31: 0  |  0xffffffff  ||  STATUS
  *     4  |  0x0010  |  31: 0  |  0xffffffff  ||  RUNNING_JOB
  *     5  |  0x0014  |  31: 0  |  0xffffffff  ||  SOFT_CLEAR
- *   6-7  |          |         |              ||  Reserved
- *     8  |  0x0020  |  31: 0  |  0xffffffff  ||  BYTECODE0 [31:0]
- *     9  |  0x0024  |  31: 0  |  0xffffffff  ||  BYTECODE1 [63:32]
- *    10  |  0x0028  |  31: 0  |  0xffffffff  ||  BYTECODE2 [95:64]
- *    11  |  0x002c  |  31: 0  |  0xffffffff  ||  BYTECODE3 [127:96]
- *    12  |  0x0030  |  31: 0  |  0xffffffff  ||  BYTECODE4 [159:128]
- *    13  |  0x0034  |  31:16  |  0xffff0000  ||  LOOPS0    [15:0]
- *        |          |  15: 0  |  0x0000ffff  ||  BYTECODE5 [175:160]
- *    14  |  0x0038  |  31: 0  |  0xffffffff  ||  LOOPS1    [47:16]
- *    15  |          |  31: 0  |  0xffffffff  ||  Reserved
+ *   6-15 |          |         |              ||  Reserved
  * ================================================================================
  *
  * Job-dependent registers layout
  * ================================================================================
  *  # reg |  offset  |  bits   |   bitmask    ||  content
  * -------+----------+---------+--------------++-----------------------------------
- *     0  |  0x0040  |  31: 0  |  0xffffffff  ||  A_ADDR
- *     1  |  0x0044  |  31: 0  |  0xffffffff  ||  B_ADDR
- *     2  |  0x0048  |  31: 0  |  0xffffffff  ||  C_ADDR
- *     3  |  0x004c  |  31: 0  |  0xffffffff  ||  D_ADDR
- *     4  |  0x0050  |  31: 0  |  0xffffffff  ||  NB_ITER
- *     5  |  0x0054  |  31: 0  |  0xffffffff  ||  LEN_ITER
- *     6  |  0x0058  |  31:16  |  0xffff0000  ||  SHIFT
- *        |          |   0: 0  |  0x00000001  ||  SIMPLEMUL
- *     7  |  0x005c  |  31: 0  |  0xffffffff  ||  VECTSTRIDE
- *     8  |  0x0060  |  31: 0  |  0xffffffff  ||  VECTSTRIDE2
+ *     0  |  0x0040  |  31: 0  |  0xffffffff  ||  INPUT_ADDR
+ *     1  |  0x0044  |  31: 0  |  0xffffffff  ||  OUTPUT_ADDR
+ *     2  |  0x0048  |  31: 0  |  0xffffffff  ||  KEY_255_224
+ *     3  |  0x004b  |  31: 0  |  0xffffffff  ||  KEY_223_192
+ *     4  |  0x0050  |  31: 0  |  0xffffffff  ||  KEY_191_160
+ *     5  |  0x0054  |  31: 0  |  0xffffffff  ||  KEY_159_128
+ *     6  |  0x0058  |  31: 0  |  0xffffffff  ||  KEY_127_96
+ *     7  |  0x005b  |  31: 0  |  0xffffffff  ||  KEY_95_64
+ *     8  |  0x0060  |  31: 0  |  0xffffffff  ||  KEY_63_32
+ *     9  |  0x0064  |  31: 0  |  0xffffffff  ||  KEY_31_0
+
+ *
  * ================================================================================
  *
  */
@@ -73,85 +50,58 @@
 #define HWPE_WRITE(value, offset) *(int *)(ARCHI_HWPE_ADDR_BASE + offset) = value
 #define HWPE_READ(offset) *(int *)(ARCHI_HWPE_ADDR_BASE + offset)
 
-static inline void hwpe_bytecode_set(unsigned int offs, unsigned int value) {
-  HWPE_WRITE(value, HWPE_BYTECODE+offs);
+static inline void hwpe_input_addr_set(unsigned int value)
+{
+  HWPE_WRITE(value, HWPE_INPUT_ADDR);
 }
 
-static inline void hwpe_a_addr_set(unsigned int value) {
-  HWPE_WRITE(value, HWPE_A_ADDR);
+static inline void hwpe_output_addr_set(unsigned int value)
+{
+  HWPE_WRITE(value, HWPE_OUTPUT_ADDR);
 }
 
-static inline void hwpe_b_addr_set(unsigned int value) {
-  HWPE_WRITE(value, HWPE_B_ADDR);
+static inline void hwpe_key_set(uint32_t *value)
+{
+
+  HWPE_WRITE(value[7], HWPE_KEY_255_224);
+  HWPE_WRITE(value[6], HWPE_KEY_223_192);
+  HWPE_WRITE(value[5], HWPE_KEY_191_160);
+  HWPE_WRITE(value[4], HWPE_KEY_159_128);
+  HWPE_WRITE(value[3], HWPE_KEY_127_96);
+  HWPE_WRITE(value[2], HWPE_KEY_95_64);
+  HWPE_WRITE(value[1], HWPE_KEY_63_32);
+  HWPE_WRITE(value[0], HWPE_KEY_31_0);
 }
 
-static inline void hwpe_c_addr_set(unsigned int value) {
-  HWPE_WRITE(value, HWPE_C_ADDR);
-}
-
-static inline void hwpe_d_addr_set(unsigned int value) {
-  HWPE_WRITE(value, HWPE_D_ADDR);
-}
-
-static inline void hwpe_nb_iter_set(unsigned int value) {
-  HWPE_WRITE(value, HWPE_NB_ITER);
-}
-
-static inline void hwpe_len_iter_set(unsigned int value) {
-  HWPE_WRITE(value, HWPE_LEN_ITER);
-}
-
-static inline void hwpe_shift_simplemul_set(unsigned int value) {
-  HWPE_WRITE(value, HWPE_SHIFT_SIMPLEMUL);
-}
-
-static inline void hwpe_vectstride_set(unsigned int value) {
-  HWPE_WRITE(value, HWPE_VECTSTRIDE);
-}
-
-static inline void hwpe_vectstride2_set(unsigned int value) {
-  HWPE_WRITE(value, HWPE_VECTSTRIDE2);
-}
-
-static inline unsigned int hwpe_shift_simplemul_value(
-  unsigned short shift,
-  unsigned       simplemul
-) {
-  unsigned int res = 0;
-#if defined(__riscv__) && !defined(RV_ISA_RV32)
-  res = __builtin_bitinsert(0,   shift,     16, 16);
-  res = __builtin_bitinsert(res, simplemul,  8,  0);
-#else
-  res |= ((shift     & 0xffff) << 16) |
-         ((simplemul & 0xff));
-#endif
-  return res;
-}
-
-static inline void hwpe_trigger_job() {
+static inline void hwpe_trigger_job()
+{
   HWPE_WRITE(0, HWPE_TRIGGER);
 }
 
-static inline int hwpe_acquire_job() {
+static inline int hwpe_acquire_job()
+{
   return HWPE_READ(HWPE_ACQUIRE);
 }
 
-static inline unsigned int hwpe_get_status() {
+static inline unsigned int hwpe_get_status()
+{
   return HWPE_READ(HWPE_STATUS);
 }
 
-static inline void hwpe_soft_clear() {
+static inline void hwpe_soft_clear()
+{
   volatile int i;
   HWPE_WRITE(0, HWPE_SOFT_CLEAR);
 }
 
-static inline void hwpe_cg_enable() {
+static inline void hwpe_cg_enable()
+{
   return;
 }
 
-static inline void hwpe_cg_disable() {
+static inline void hwpe_cg_disable()
+{
   return;
 }
 
 #endif /* __HAL_HWPE_H__ */
-

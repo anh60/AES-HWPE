@@ -101,4 +101,3 @@ hw/bender:
 	cd $(BENDER_INSTALL_DIR);      \
 	curl --proto '=https'  \
 	--tlsv1.2 https://pulp-platform.github.io/bender/init -sSf | sh -s -- 0.27.1
-
