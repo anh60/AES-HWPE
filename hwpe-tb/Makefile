@@ -18,7 +18,7 @@ mkfile_path := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
 gui ?= 0
 P_STALL ?= 0.0
 BUILD_DIR ?= build
-TEST_SRCS ?= sw/tb_hwpe.c
+TEST_SRCS := sw/tb_hwpe.c sw/aes_hwpe.c 
 
 # Bender stuff
 BENDER_VERSION = 0.23.2
@@ -32,8 +32,8 @@ LD_OPTS=-march=rv32imc -D__riscv__ -MMD -MP -nostartfiles -nostdlib -Wl,--gc-sec
 
 # Setup build object dirs
 CRT=$(BUILD_DIR)/crt0.o
-OBJ=$(BUILD_DIR)/$(TEST_SRCS)/verif.o
-BIN=$(BUILD_DIR)/$(TEST_SRCS)/verif
+OBJ=$(patsubst %.c,$(BUILD_DIR)/%.o,$(notdir $(TEST_SRCS)))  # Modified to create objects for both sources
+BIN=$(BUILD_DIR)/verif  # Assuming a single binary for both sources
 STIM_INSTR=$(BUILD_DIR)/$(TEST_SRCS)/stim_instr.txt
 STIM_DATA=$(BUILD_DIR)/$(TEST_SRCS)/stim_data.txt
 VSIM_INI=$(BUILD_DIR)/$(TEST_SRCS)/modelsim.ini
@@ -50,19 +50,14 @@ $(STIM_INSTR) $(STIM_DATA): $(BIN)
 	ln -sfn $(mkfile_path)/hw/veri/verilated $(VERI_LIBS)
 
 $(BIN): $(CRT) $(OBJ) sw/link.ld
-	$(LD) $(LD_OPTS) -o $(BIN) $(CRT) $(OBJ) -Tsw/link.ld
+	$(LD) $(LD_OPTS) -o $(BIN) $(CRT) $(OBJ) -Tsw/link.ld  # Modified to link all objects
 
 $(CRT): $(BUILD_DIR) sw/crt0.S
 	$(CC) $(CC_OPTS) -c sw/crt0.S -o $(CRT)
 
-$(OBJ): $(TEST_SRCS) $(BUILD_DIR)/$(TEST_SRCS)
-	$(CC) $(CC_OPTS) -c $(TEST_SRCS) -Isw -o $(OBJ)
+$(BUILD_DIR)/%.o: sw/%.c  # Modified rule for object file creation
+	$(CC) $(CC_OPTS) -c $< -Isw -o $@
 	
-$(BUILD_DIR)/$(TEST_SRCS):
-	mkdir -p $(BUILD_DIR)/$(TEST_SRCS)
-
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
 
 # Build explicit rules
 run: $(CRT)

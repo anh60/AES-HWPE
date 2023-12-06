@@ -1,8 +1,8 @@
+#include <stdint.h>
+
 #include "aes_hwpe.h"
 #include "hal_hwpe.h"
 #include "archi_hwpe.h"
-
-#include <stdint.h>
 
 void aes_hwpe_configure(uint8_t *input, uint8_t *output)
 {
