@@ -44,7 +44,7 @@ $(OBJ): sw/tb_hwpe.c
 
 # Link the object files together to create the final binary
 $(BIN): $(CRT) $(AES_OBJ) $(OBJ) sw/link.ld
-	$(LD) $(LD_OPTS) -o $(BIN) $(CRT) $(AES_OBJ) $(OBJ) -Tsw/link.ld
+	$(LD) $(LD_OPTS) -o $(BIN) $(CRT)  $(OBJ) $(AES_OBJ) -Tsw/link.ld
 
 $(CRT): $(BUILD_DIR) sw/crt0.S
 	$(CC) $(CC_OPTS) -c sw/crt0.S -o $(CRT)
