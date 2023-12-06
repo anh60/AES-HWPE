@@ -35,13 +35,12 @@ int main()
 
   aes_hwpe_init();
 
-  // BLOCKING FUNCTION!
-  aes_hwpe_aquire_job();
-
   // job-dependent registers
   aes_hwpe_configure(input, output);
 
-  // Blocking function, be carefull!
+  // BLOCKING FUNCTION!
+  aes_hwpe_aquire_job();
+
   aes_hwpe_start();
 
   // wait for end of computation
