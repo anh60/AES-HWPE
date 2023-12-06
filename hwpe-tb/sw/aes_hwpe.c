@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-void aes_hwpe_configure(input, output)
+void aes_hwpe_configure(uint8_t *input, uint8_t *output)
 {
     // job-dependent registers
     hwpe_input_addr_set((unsigned int)input);
