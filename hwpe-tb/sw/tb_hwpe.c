@@ -47,6 +47,8 @@ int main()
 
   aes_hwpe_start();
 
+  asm volatile("wfi" ::: "memory");
+
   aes_hwpe_deinit();
 
   // return errors
