@@ -2,7 +2,9 @@
 #include "hal_hwpe.h"
 #include "archi_hwpe.h"
 
-void aes_hwpe_configure(unsigned int *input, unsigned int *output)
+#include <stdint.h>
+
+void aes_hwpe_configure(input, output)
 {
     // job-dependent registers
     hwpe_input_addr_set((unsigned int)input);
