@@ -30,9 +30,15 @@ int main()
   uint8_t *input = stim_plaintext;
   uint8_t *output = stim_chipertext;
 
-  aes_hwpe_init();
+  // enable hwpe
+  hwpe_cg_enable();
 
-  aes_hwpe_configure(input, output);
+  while (hwpe_acquire_job() < 0)
+    ;
+
+  // job-dependent registers
+  hwpe_a_addr_set((unsigned int)input);
+  hwpe_d_addr_set((unsigned int)output);
 
   // Blocking function, be carefull!
   aes_hwpe_start();
@@ -43,5 +49,5 @@ int main()
 
   aes_hwpe_deinit();
 
-  return 0;
+  return 1;
 }
