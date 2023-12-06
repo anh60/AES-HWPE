@@ -39,8 +39,8 @@ int main()
     ;
 
   // job-dependent registers
-  hwpe_a_addr_set((unsigned int)input);
-  hwpe_d_addr_set((unsigned int)output);
+  hwpe_input_addr_set((unsigned int)input);
+  hwpe_output_addr_set((unsigned int)output);
 
   // Blocking function, be carefull!
   aes_hwpe_start();
