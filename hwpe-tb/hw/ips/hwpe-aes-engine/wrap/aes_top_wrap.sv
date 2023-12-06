@@ -1,15 +1,13 @@
 /*
- * mac_top_wrap.sv
- * Francesco Conti <fconti@iis.ee.ethz.ch>
+ * aes_top_wrap.sv
+ * Andreas Holleland, Marcus Alexander Tjomsaas
  *
- * Copyright (C) 2017 ETH Zurich, University of Bologna
- * All rights reserved.
  */
 
-import mac_package::*;
+import aes_package::*;
 import hwpe_ctrl_package::*;
 
-module mac_top_wrap
+module aes_top_wrap
 #(
   parameter N_CORES = 2,
   parameter MP  = 4,
@@ -20,8 +18,10 @@ module mac_top_wrap
   input  logic                                  clk_i,
   input  logic                                  rst_ni,
   input  logic                                  test_mode_i,
-  // evnets
+
+  // events
   output logic [N_CORES-1:0][REGFILE_N_EVT-1:0] evt_o,
+
   // tcdm master ports
   output logic [MP-1:0]                         tcdm_req,
   input  logic [MP-1:0]                         tcdm_gnt,
@@ -31,6 +31,7 @@ module mac_top_wrap
   output logic [MP-1:0][31:0]                   tcdm_data,
   input  logic [MP-1:0][31:0]                   tcdm_r_data,
   input  logic [MP-1:0]                         tcdm_r_valid,
+
   // periph slave port
   input  logic                                  periph_req,
   output logic                                  periph_gnt,
@@ -81,7 +82,7 @@ module mac_top_wrap
     periph_r_id    = periph.r_id;
   end
 
-  mac_top #(
+  aes_top #(
     .N_CORES ( N_CORES ),
     .MP      ( MP      ),
     .ID      ( ID      )
@@ -94,4 +95,4 @@ module mac_top_wrap
     .periph      ( periph      )
   );
 
-endmodule // mac_top_wrap
+endmodule
