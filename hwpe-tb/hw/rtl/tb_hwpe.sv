@@ -12,7 +12,7 @@ module tb_hwpe;
   // parameters
   parameter PROB_STALL = 0.1;
   parameter NC = 8;
-  parameter MP = 4;
+  parameter MP = 2;
   parameter ID = 10;
   parameter MEMORY_SIZE = 256*1024;
   parameter BASE_ADDR = 0;
@@ -145,7 +145,7 @@ module tb_hwpe;
   end
 
   generate
-    for(genvar ii=0; ii<4; ii++) begin : tcdm_binding
+    for(genvar ii=0; ii<2; ii++) begin : tcdm_binding
       assign tcdm[ii].req  = tcdm_req  [ii];
       assign tcdm[ii].add  = {8'b0, tcdm_add [ii][23:0]};
       assign tcdm[ii].wen  = tcdm_wen  [ii];
@@ -155,14 +155,14 @@ module tb_hwpe;
       assign tcdm_r_data  [ii] = tcdm[ii].r_data;
       assign tcdm_r_valid [ii] = tcdm[ii].r_valid;
     end
-    assign tcdm[4].req  = data_req & (data_addr[31:24] != '0) & ~data_addr[HWPE_ADDR_BASE_BIT];
-    assign tcdm[4].add  = {8'b0, data_addr[23:0]};
-    assign tcdm[4].wen  = ~data_we;
-    assign tcdm[4].be   = data_be;
-    assign tcdm[4].data = data_wdata;
-    assign data_gnt    = periph_req ? periph_gnt : stack[0].req ? stack[0].gnt : tcdm[4].gnt;
-    assign data_rdata  = periph_r_valid ? periph_r_data : stack[0].r_valid ? stack[0].r_data : tcdm[4].r_data;
-    assign data_rvalid = periph_r_valid | stack[0].r_valid | tcdm[4].r_valid;
+    assign tcdm[2].req  = data_req & (data_addr[31:24] != '0) & ~data_addr[HWPE_ADDR_BASE_BIT];
+    assign tcdm[2].add  = {8'b0, data_addr[23:0]};
+    assign tcdm[2].wen  = ~data_we;
+    assign tcdm[2].be   = data_be;
+    assign tcdm[2].data = data_wdata;
+    assign data_gnt    = periph_req ? periph_gnt : stack[0].req ? stack[0].gnt : tcdm[2].gnt;
+    assign data_rdata  = periph_r_valid ? periph_r_data : stack[0].r_valid ? stack[0].r_data : tcdm[2].r_data;
+    assign data_rvalid = periph_r_valid | stack[0].r_valid | tcdm[2].r_valid;
   endgenerate
 
   aes_top_wrap #(

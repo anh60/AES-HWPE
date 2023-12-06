@@ -14,10 +14,10 @@ module aes_engine
   input  logic                   test_mode_i,
 
   // Input stream
-  hwpe_stream_intf_stream.sink   a_i,
+  hwpe_stream_intf_stream.sink   aes_input,
 
   // Output stream
-  hwpe_stream_intf_stream.source d_o,
+  hwpe_stream_intf_stream.source aes_output,
 
   // Control channel
   input  ctrl_engine_t           ctrl_i,
@@ -30,34 +30,37 @@ module aes_engine
   // Set data register
   always_ff @(posedge clk_i or negedge rst_ni)
   begin : data_mover
-    if(a_i.valid)
+    if(aes_input.valid)
       if(ctrl_i.request_counter == 0)
-        data_reg[31:0] <= a_i.data;
+        data_reg[31:0] <= aes_input.data;
+
       else if(ctrl_i.request_counter == 1)
-        data_reg[63:32] <= a_i.data;
+        data_reg[63:32] <= aes_input.data;
+
       else if(ctrl_i.request_counter == 2)
-        data_reg[95:64] <= a_i.data;
+        data_reg[95:64] <= aes_input.data;
+
       else if(ctrl_i.request_counter == 3)
-        data_reg[127:96] <= a_i.data;
+        data_reg[127:96] <= aes_input.data;
   end 
 
   // Stream data out
   always_comb
   begin
     if(ctrl_i.request_counter == 0)
-      d_o.data = data_reg[31:0];
+      aes_output.data = data_reg[31:0];
     else if(ctrl_i.request_counter == 1)
-      d_o.data = data_reg[63:32];
+      aes_output.data = data_reg[63:32];
     else if(ctrl_i.request_counter == 2)
-      d_o.data = data_reg[95:64];
+      aes_output.data = data_reg[95:64];
     else if(ctrl_i.request_counter == 3)
-      d_o.data = data_reg[127:96];
+      aes_output.data = data_reg[127:96];
 
-    d_o.valid = ctrl_i.data_out_valid;
-    d_o.strb  = '1; // strb is always '1 --> all bytes are considered valid
+    aes_output.valid = ctrl_i.data_out_valid;
+    aes_output.strb  = '1; // strb is always '1 --> all bytes are considered valid
   end 
 
-assign a_i.ready = a_i.valid;
+assign aes_input.ready = aes_input.valid;
 
 
 endmodule

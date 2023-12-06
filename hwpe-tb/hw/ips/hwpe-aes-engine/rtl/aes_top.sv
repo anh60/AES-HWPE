@@ -37,39 +37,39 @@ module aes_top
 
   hwpe_stream_intf_stream #(
     .DATA_WIDTH(32)
-  ) a (
+  ) aes_input (
     .clk ( clk_i )
   );
 
   hwpe_stream_intf_stream #(
     .DATA_WIDTH(32)
-  ) d (
+  ) aes_output (
     .clk ( clk_i )
   );
 
   aes_engine i_engine (
-    .clk_i            ( clk_i          ),
-    .rst_ni           ( rst_ni         ),
-    .test_mode_i      ( test_mode_i    ),
-    .a_i              ( a.sink         ),
-    .d_o              ( d.source       ),
-    .ctrl_i           ( engine_ctrl    ),
-    .flags_o          ( engine_flags   )
+    .clk_i            ( clk_i          		),
+    .rst_ni           ( rst_ni         		),
+    .test_mode_i      ( test_mode_i    		),
+    .aes_input        ( aes_input.sink		),
+    .aes_output       ( aes_output.source       ),
+    .ctrl_i           ( engine_ctrl    		),
+    .flags_o          ( engine_flags   		)
   );
 
   aes_streamer #(
     .MP ( MP )
   ) i_streamer (
-    .clk_i            ( clk_i          ),
-    .rst_ni           ( rst_ni         ),
-    .test_mode_i      ( test_mode_i    ),
-    .enable_i         ( enable         ),
-    .clear_i          ( clear          ),
-    .a_o              ( a.source       ),
-    .d_i              ( d.sink         ),
-    .tcdm             ( tcdm           ),
-    .ctrl_i           ( streamer_ctrl  ),
-    .flags_o          ( streamer_flags )
+    .clk_i            ( clk_i          		),
+    .rst_ni           ( rst_ni         		),
+    .test_mode_i      ( test_mode_i    		),
+    .enable_i         ( enable         		),
+    .clear_i          ( clear          		),
+    .aes_input        ( aes_input.source       	),
+    .aes_output       ( aes_output.sink         ),
+    .tcdm             ( tcdm           		),
+    .ctrl_i           ( streamer_ctrl  		),
+    .flags_o          ( streamer_flags 		)
   );
 
   aes_ctrl #(
