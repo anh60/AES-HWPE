@@ -32,7 +32,7 @@ int main()
 
   aes_hwpe_init();
 
-  aes_hwpe_configure((unsigned int)input, (unsigned int)output);
+  aes_hwpe_configure(input, output);
 
   // Blocking function, be carefull!
   aes_hwpe_start();

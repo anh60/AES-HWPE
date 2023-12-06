@@ -5,8 +5,8 @@
 void aes_hwpe_configure(unsigned int *input, unsigned int *output)
 {
     // job-dependent registers
-    hwpe_input_addr_set(input);
-    hwpe_output_addr_set(output);
+    hwpe_input_addr_set((unsigned int)input);
+    hwpe_output_addr_set((unsigned int)output);
 
     return;
 }
