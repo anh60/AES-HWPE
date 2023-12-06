@@ -21,13 +21,16 @@ void aes_hwpe_start(void)
     return;
 }
 
+void aes_hwpe_aquire_job()
+{
+    while (hwpe_acquire_job() < 0)
+        ;
+}
+
 void aes_hwpe_init(void)
 {
     // enable hwpe
     hwpe_cg_enable();
-
-    while (hwpe_acquire_job() < 0)
-        ;
 
     return;
 }

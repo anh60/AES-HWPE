@@ -33,15 +33,13 @@ int main()
   uint8_t *input = stim_plaintext;
   uint8_t *output = stim_chipertext;
 
-  // enable hwpe
-  hwpe_cg_enable();
+  aes_hwpe_init();
 
-  while (hwpe_acquire_job() < 0)
-    ;
+  // BLOCKING FUNCTION!
+  aes_hwpe_aquire_job();
 
   // job-dependent registers
-  hwpe_input_addr_set((unsigned int)input);
-  hwpe_output_addr_set((unsigned int)output);
+  aes_hwpe_configure(input, output);
 
   // Blocking function, be carefull!
   aes_hwpe_start();
