@@ -40,11 +40,12 @@ int main()
 
   // BLOCKING FUNCTION!
   aes_hwpe_start();
-  aes_hwpe_start();
 
   // wait for end of computation
   // Sleeps until the HWPE interrupts with a hwpe.done flag.
   asm volatile("wfi" ::: "memory");
+
+  aes_hwpe_start();
 
   aes_hwpe_deinit();
 
