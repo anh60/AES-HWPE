@@ -28,6 +28,7 @@
 #include "hal_hwpe.h"
 int main()
 {
+  volatile int errors = 0;
 
   uint8_t *input = stim_plaintext;
   uint8_t *output = stim_chipertext;
@@ -51,5 +52,8 @@ int main()
 
   aes_hwpe_deinit();
 
-  return 1;
+  // return errors
+  *(int *)0x80000000 = errors;
+
+  return errors;
 }
