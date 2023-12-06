@@ -18,7 +18,7 @@ mkfile_path := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
 gui ?= 0
 P_STALL ?= 0.0
 BUILD_DIR ?= build
-TEST_SRCS ?= sw/tb_hwpe.c sw/aes_hwpe.c
+TEST_SRCS ?= sw/tb_hwpe.c
 
 # Bender stuff
 BENDER_VERSION = 0.23.2
