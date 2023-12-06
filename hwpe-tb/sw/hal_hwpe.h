@@ -23,8 +23,8 @@
  * ================================================================================
  *  # reg |  offset  |  bits   |   bitmask    ||  content
  * -------+----------+---------+--------------++-----------------------------------
- *     0  |  0x0040  |  31: 0  |  0xffffffff  ||  PLAINTEXT_ADDR
- *     1  |  0x0044  |  31: 0  |  0xffffffff  ||  CHIPERTEXT_ADDR
+ *     0  |  0x0040  |  31: 0  |  0xffffffff  ||  INPUT_ADDR
+ *     1  |  0x0044  |  31: 0  |  0xffffffff  ||  OUTPUT_ADDR
  *     2  |  0x0048  |  31: 0  |  0xffffffff  ||  NUM_BLOCKS
  * ================================================================================
  *
@@ -41,14 +41,14 @@
 #define HWPE_WRITE(value, offset) *(int *)(ARCHI_HWPE_ADDR_BASE + offset) = value
 #define HWPE_READ(offset) *(int *)(ARCHI_HWPE_ADDR_BASE + offset)
 
-static inline void hwpe_plaintext_addr_set(unsigned int value)
+static inline void hwpe_input_addr_set(unsigned int value)
 {
-  HWPE_WRITE(value, HWPE_PLAINTEXT_ADDR);
+  HWPE_WRITE(value, HWPE_INPUT_ADDR);
 }
 
-static inline void hwpe_chipertext_addr_set(unsigned int value)
+static inline void hwpe_output_addr_set(unsigned int value)
 {
-  HWPE_WRITE(value, HWPE_CHIPERTEXT_ADDR);
+  HWPE_WRITE(value, HWPE_OUTPUT_ADDR);
 }
 
 static inline void hwpe_num_blocks_set(unsigned int value)

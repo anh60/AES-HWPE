@@ -19,9 +19,7 @@
  */
 
 #include <stdint.h>
-#include "archi_hwpe.h"
-#include "hal_hwpe.h"
-#include "tinyprintf.h"
+#include "aes_hwpe.h"
 
 #include "inc/hwpe_stimuli_chipertext.h"
 #include "inc/hwpe_stimuli_plaintext.h"
@@ -29,47 +27,21 @@
 int main()
 {
 
-  uint8_t *chipertext = stim_chipertext;
-  uint8_t *plaintext = stim_plaintext;
+  uint8_t *input = stim_plaintext;
+  uint8_t *output = stim_chipertext;
 
-  volatile int errors = 0;
+  aes_hwpe_init();
 
-  int offload_id_tmp, offload_id;
+  aes_hwpe_configure(input, output);
 
-  /* convolution-accumulation - HW */
-
-  // enable hwpe
-  hwpe_cg_enable();
-
-  while ((offload_id_tmp = hwpe_acquire_job()) < 0)
-    ;
-
-  // job-dependent registers
-  hwpe_plaintext_addr_set((unsigned int)plaintext);
-  hwpe_d_addr_set((unsigned int)chipertext);
-
-  // start hwpe operation
-  hwpe_trigger_job();
+  // Blocking function, be carefull!
+  aes_hwpe_start();
 
   // wait for end of computation
   // Sleeps until the HWPE interrupts with a hwpe.done flag.
   asm volatile("wfi" ::: "memory");
 
-  // disable hwpe
-  hwpe_cg_disable();
+  aes_hwpe_deinit();
 
-  // check
-  if (((uint32_t *)chipertext)[0] != 0x7f228fd6)
-    errors++;
-  if (((uint32_t *)chipertext)[1] != 0x23a7d5c2)
-    errors++;
-  if (((uint32_t *)chipertext)[2] != 0x7f281848)
-    errors++;
-  if (((uint32_t *)chipertext)[3] != 0x6127d834)
-    errors++;
-
-  // return errors
-  *(int *)0x80000000 = errors;
-
-  return errors;
+  return 0;
 }
