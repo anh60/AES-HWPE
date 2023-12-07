@@ -4,3 +4,6 @@
 [submodule "hw/ips/hwpe-stream"]
 	path = hw/ips/hwpe-stream
 	url = https://github.com/pulp-platform/hwpe-stream
+[submodule "hw/ips/aes"]
+	path = hw/ips/aes
+	url = https://github.com/secworks/aes
