@@ -45,7 +45,7 @@ package aes_package;
   } ctrl_engine_t; 
 
   typedef struct packed {
-    
+    logic enable;
   } flags_engine_t;
 
   // AES FSM states with explicit binary values. Helpfull when debugging.
