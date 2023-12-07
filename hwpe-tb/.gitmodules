@@ -6,4 +6,4 @@
 	url = https://github.com/pulp-platform/hwpe-stream
 [submodule "hw/ips/aes"]
 	path = hw/ips/aes
-	url = https://github.com/secworks/aes/tree/master/src/rtl
+	url = https://github.com/secworks/aes/tree/master/
