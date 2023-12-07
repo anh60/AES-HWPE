@@ -214,7 +214,6 @@ module aes_fsm (
 
       AES_FINISHED: begin 
         slave_ctrl_o.done = 1'b1;
-        block_counter = '0;
       end 
     endcase
 
