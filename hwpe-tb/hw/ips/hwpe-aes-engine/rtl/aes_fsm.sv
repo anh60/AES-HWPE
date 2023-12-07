@@ -27,6 +27,7 @@ module aes_fsm (
   ctrl_streamer_t streamer_ctrl_cfg;
   logic request_count_enable = '0;
   logic [31:0] data_size = '0;
+  logic [15:0] block_counter = '0;
 
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
@@ -48,8 +49,6 @@ module aes_fsm (
     else if(request_count_enable) 
       ctrl_engine_o.request_counter <= ctrl_engine_o.request_counter + 1;       
   end 
-
-
 
   always_comb
   begin : fsm_comb_next_state
@@ -198,10 +197,12 @@ module aes_fsm (
 
       AES_MEMORY_WRITE_DONE: begin
         ctrl_engine_o.clear = '1;
+        block_counter = block_counter + 1;
       end
 
       AES_FINISHED: begin 
         slave_ctrl_o.done = 1'b1;
+        block_counter = '0;
       end 
     endcase
 
@@ -219,7 +220,7 @@ always_comb
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.line_length = 1;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_stride = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_length = 1;
-    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[HWPE_INPUT_ADDR] + ($unsigned(ctrl_engine_o.request_counter) * 4);
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[HWPE_INPUT_ADDR] + ($unsigned(ctrl_engine_o.request_counter) * 4) + ($unsigned(block_counter) * 16);
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_roll   = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.loop_outer  = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.realign_type = '0;
@@ -229,7 +230,7 @@ always_comb
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.line_length = 1;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.feat_stride = '0;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.feat_length = 1;
-    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[HWPE_OUTPUT_ADDR] + ($unsigned(ctrl_engine_o.request_counter) * 4);
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[HWPE_OUTPUT_ADDR] + ($unsigned(ctrl_engine_o.request_counter) * 4) + ($unsigned(block_counter) * 16);
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.feat_roll   = '0;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.loop_outer  = '0;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.realign_type = '0;
