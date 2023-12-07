@@ -44,6 +44,13 @@ module aes_engine
         data_reg[127:96] <= aes_input.data;
   end 
 
+  // Encryption
+  always_comb
+  begin
+    if(ctrl_i.enable)
+      
+  end
+
   // Stream data out
   always_comb
   begin

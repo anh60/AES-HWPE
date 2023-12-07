@@ -68,7 +68,7 @@ module aes_fsm (
       end 
       
       AES_REQUEST_DATA: begin
-        if (streamer_flags_i.plaintext_source_flags.ready_start)
+        if (streamer_flags_i.aes_input_source_flags.ready_start)
           next_state = AES_REQUEST_DATA_WAIT;
           
       end 
@@ -76,7 +76,7 @@ module aes_fsm (
 
       //WORKING -> FINISHED
       AES_REQUEST_DATA_WAIT: begin
-         if (streamer_flags_i.plaintext_source_flags.done) begin
+         if (streamer_flags_i.aes_input_source_flags.done) begin
             next_state = AES_REQUEST_DATA;
 
             if(ctrl_engine_o.data_size == 0)
@@ -95,7 +95,7 @@ module aes_fsm (
 
 
       AES_SEND_DATA: begin
-        if (streamer_flags_i.chipertext_sink_flags.ready_start)
+        if (streamer_flags_i.aes_output_sink_flags.ready_start)
           next_state = AES_SEND_DATA_WAIT;
           
       end 
@@ -145,8 +145,8 @@ module aes_fsm (
 
     //Streamer
     streamer_ctrl_o = streamer_ctrl_cfg;
-    streamer_ctrl_o.plaintext_source_ctrl.req_start = '0;
-    streamer_ctrl_o.chipertext_sink_ctrl.req_start  = '0;
+    streamer_ctrl_o.aes_input_source_ctrl.req_start = '0;
+    streamer_ctrl_o.aes_output_sink_ctrl.req_start  = '0;
     
     //Slave peripheral? 
     slave_ctrl_o = '0;
@@ -160,15 +160,16 @@ module aes_fsm (
       AES_STARTING: begin 
         //Engine start
         ctrl_engine_o.start  = 1'b1;
+        ctrl_engine_o.data_size = reg_file_i.hwpe_params[HWPE_DATA_BYTE_LENGTH]
         //Streamer request
       end 
 
       AES_REQUEST_DATA: begin 
-          streamer_ctrl_o.plaintext_source_ctrl.req_start = 1'b1;
+          streamer_ctrl_o.aes_input_source_ctrl.req_start = 1'b1;
       end 
 
       AES_REQUEST_DATA_WAIT: begin 
-        if (streamer_flags_i.plaintext_source_flags.done) 
+        if (streamer_flags_i.aes_input_source_flags.done) 
             request_count_enable = '1;
             ctrl_engine_o.data_size = ctrl_engine_o.data_size - 4;
       end
@@ -178,7 +179,7 @@ module aes_fsm (
       end
 
       AES_SEND_DATA: begin 
-        streamer_ctrl_o.chipertext_sink_ctrl.req_start = 1'b1;
+        streamer_ctrl_o.aes_output_sink_ctrl.req_start = 1'b1;
       end 
 
 
@@ -202,27 +203,27 @@ module aes_fsm (
 always_comb
   begin: fsm_comb_reg
     //Change the number four to actually represent the size of the register
-    //Plaintext stream
+    //aes_input stream
     streamer_ctrl_cfg = '0;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.trans_size  = 1;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.line_stride = '0;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.line_length = 1;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.feat_stride = '0;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.feat_length = 1;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[0] + ($unsigned(ctrl_engine_o.request_counter) * 4);
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.feat_roll   = '0;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.loop_outer  = '0;
-    streamer_ctrl_cfg.plaintext_source_ctrl.addressgen_ctrl.realign_type = '0;
-    // Chipertext stream 
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.trans_size  = 1;
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.line_stride = '0;
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.line_length = 1;
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.feat_stride = '0;
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.feat_length = 1;
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[1] + ($unsigned(ctrl_engine_o.request_counter) * 4);
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.feat_roll   = '0;
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.loop_outer  = '0;
-    streamer_ctrl_cfg.chipertext_sink_ctrl.addressgen_ctrl.realign_type = '0;
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.trans_size  = 1;
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.line_stride = '0;
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.line_length = 1;
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_stride = '0;
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_length = 1;
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[HWPE_INPUT_ADDR] + ($unsigned(ctrl_engine_o.request_counter) * 4);
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_roll   = '0;
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.loop_outer  = '0;
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.realign_type = '0;
+    // aes_output stream 
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.trans_size  = 1;
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.line_stride = '0;
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.line_length = 1;
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.feat_stride = '0;
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.feat_length = 1;
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[HWPE_OUTPUT_ADDR] + ($unsigned(ctrl_engine_o.request_counter) * 4);
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.feat_roll   = '0;
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.loop_outer  = '0;
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.realign_type = '0;
 
   end
 
