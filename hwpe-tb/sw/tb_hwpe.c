@@ -44,6 +44,7 @@ int main()
   // Configuring the AES HWPE with the input location, output location, data size and key length.
   aes_hwpe_configure(&data_to_encrypt[0], &encryption_memory[0], sizeof(data_to_encrypt), KEY_BIT_LENGTH);
 
+  aes_hwpe_key_set(key);
   // BLOCKING FUNCTION!
   aes_hwpe_start();
 
