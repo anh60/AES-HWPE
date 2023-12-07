@@ -11,7 +11,7 @@ void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_leng
     hwpe_output_addr_set((uint32_t)output);
     hwpe_data_byte_length_set(data_byte_length);
 
-    uint8_t key_mode;
+    uint8_t key_mode = -1;
     switch (key_bit_length)
     {
     case 128:
