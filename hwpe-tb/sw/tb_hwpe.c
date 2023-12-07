@@ -27,7 +27,7 @@
 #define KEY_BIT_LENGTH 256
 uint32_t key[KEY_BIT_LENGTH / 32] = {1, 2, 3, 4, 5, 6, 7, 8};
 
-uint8_t data_to_encrypt[] = {0x12, 0x23, 0x45, 0x56};
+__attribute__((aligned(16))) uint8_t data_to_encrypt[] = {0x12, 0x23, 0x45, 0x56};
 uint8_t encryption_memory[50];
 uint8_t decryption_memory[50];
 
