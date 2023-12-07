@@ -111,14 +111,18 @@ module aes_fsm (
       AES_MEMORY_WRITE_WAIT: begin
           next_state = AES_SEND_DATA;
           if(ctrl_engine_o.request_counter == 3)
-            next_state = AES_FINISHED;
+            next_state = AES_MEMORY_WRITE_DONE;
       end 
+
+      AES_MEMORY_WRITE_DONE: begin
+        next_state = AES_REQUEST_DATA;
+        if(data_size == 0)
+          next_state = AES_FINISHED;
+      end
 
       //FINSIHED -> IDLE
       AES_FINISHED: begin
-          next_state = AES_REQUEST_DATA;
-          if(data_size == 0)
-            next_state = AES_IDLE;
+        next_state = AES_IDLE;
       end
 
       // Default case to handle unexpected states
@@ -184,15 +188,17 @@ module aes_fsm (
         streamer_ctrl_o.aes_output_sink_ctrl.req_start = 1'b1;
       end 
 
-
       AES_SEND_DATA_WAIT: begin 
-          ctrl_engine_o.data_out_valid = '1;
-
+        ctrl_engine_o.data_out_valid = '1;
       end 
 
       AES_MEMORY_WRITE_WAIT: begin 
-          request_count_enable = '1; 
+        request_count_enable = '1; 
       end 
+
+      AES_MEMORY_WRITE_DONE: begin
+        ctrl_engine_o.clear = '1;
+      end
 
       AES_FINISHED: begin 
         slave_ctrl_o.done = 1'b1;
