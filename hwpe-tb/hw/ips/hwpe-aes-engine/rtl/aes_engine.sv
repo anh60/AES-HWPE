@@ -60,6 +60,13 @@ module aes_engine
     aes_output.strb  = '1; // strb is always '1 --> all bytes are considered valid
   end 
 
+  // Clear data reg
+  always_comb
+  begin
+    if(ctrl_i.clear)
+      data_reg = '0;
+  end
+
 assign aes_input.ready = aes_input.valid;
 
 
