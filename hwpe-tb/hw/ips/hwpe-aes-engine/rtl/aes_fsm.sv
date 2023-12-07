@@ -26,6 +26,7 @@ module aes_fsm (
 
   ctrl_streamer_t streamer_ctrl_cfg;
   logic request_count_enable = '0;
+  logic [31:0] data_size = '0;
 
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
@@ -79,8 +80,8 @@ module aes_fsm (
          if (streamer_flags_i.aes_input_source_flags.done) begin
             next_state = AES_REQUEST_DATA;
 
-            //if(ctrl_engine_o.data_size == 0)
-            //  next_state = AES_WORKING;
+            if(data_size == 0)
+              next_state = AES_WORKING;
             
             if(ctrl_engine_o.request_counter == 3)
               next_state = AES_WORKING;
@@ -116,7 +117,7 @@ module aes_fsm (
       //FINSIHED -> IDLE
       AES_FINISHED: begin
           next_state = AES_REQUEST_DATA;
-          //if(ctrl_engine_o.data_size == 0)
+          if(data_size == 0)
             next_state = AES_IDLE;
       end
 
@@ -160,7 +161,7 @@ module aes_fsm (
       AES_STARTING: begin 
         //Engine start
         ctrl_engine_o.start  = 1'b1;
-        ctrl_engine_o.data_size = reg_file_i.hwpe_params[HWPE_DATA_BYTE_LENGTH];
+        data_size = ctrl_engine_o.data_size;
         //Streamer request
       end 
 
@@ -169,9 +170,10 @@ module aes_fsm (
       end 
 
       AES_REQUEST_DATA_WAIT: begin 
-        if (streamer_flags_i.aes_input_source_flags.done) 
+        if (streamer_flags_i.aes_input_source_flags.done) begin
             request_count_enable = '1;
-            ctrl_engine_o.data_size = ctrl_engine_o.data_size - 4;
+            data_size = data_size - 4;
+        end
       end
 
       AES_WORKING: begin
@@ -202,6 +204,7 @@ module aes_fsm (
 
 always_comb
   begin: fsm_comb_reg
+    ctrl_engine_o.data_size = reg_file_i.hwpe_params[HWPE_DATA_BYTE_LENGTH];
     //Change the number four to actually represent the size of the register
     //aes_input stream
     streamer_ctrl_cfg = '0;
