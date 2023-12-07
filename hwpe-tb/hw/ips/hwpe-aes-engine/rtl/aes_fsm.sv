@@ -160,7 +160,7 @@ module aes_fsm (
       AES_STARTING: begin 
         //Engine start
         ctrl_engine_o.start  = 1'b1;
-        ctrl_engine_o.data_size = reg_file_i.hwpe_params[HWPE_DATA_BYTE_LENGTH]
+        ctrl_engine_o.data_size = reg_file_i.hwpe_params[HWPE_DATA_BYTE_LENGTH];
         //Streamer request
       end 
 

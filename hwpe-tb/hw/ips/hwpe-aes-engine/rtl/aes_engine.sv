@@ -48,7 +48,7 @@ module aes_engine
   always_comb
   begin
     if(ctrl_i.enable)
-      
+      ;
   end
 
   // Stream data out
