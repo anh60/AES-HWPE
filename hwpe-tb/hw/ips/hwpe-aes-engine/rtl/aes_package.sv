@@ -44,7 +44,7 @@ package aes_package;
     logic [1:0] key_size;
   } ctrl_engine_t; 
 
-   typedef struct packed {
+  typedef struct packed {
     logic enable;
   } flags_engine_t;
 
