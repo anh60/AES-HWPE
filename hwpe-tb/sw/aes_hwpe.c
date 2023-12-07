@@ -11,7 +11,7 @@ void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_leng
     hwpe_output_addr_set((uint32_t)output);
     hwpe_data_byte_length_set(data_byte_length);
 
-    uint8_t key_mode;
+    uint16_t key_mode = 0xFFFF;
     switch (key_bit_length)
     {
     case 128:
@@ -30,13 +30,13 @@ void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_leng
         // Unsupported key length!!
         break;
     }
-    hwpe_key_mode_set(key_mode);
+    hwpe_key_mode_set((uint32_t)key_mode);
     return;
 }
 
-void aes_hwpe_key_set(uint32_t *key_value)
+void aes_hwpe_key_set(uint8_t *key_value)
 {
-    hwpe_key_set(key_value);
+    hwpe_key_set((uint32_t *)key_value);
 }
 
 void aes_hwpe_start(void)
