@@ -48,6 +48,8 @@ package aes_package;
     logic start;
     logic data_out_valid;
     logic [1:0] request_counter;
+    logic [31:0] data_size;
+    logic [1:0] key_size;
   } ctrl_engine_t; 
 
     typedef struct packed {
