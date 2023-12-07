@@ -61,10 +61,10 @@ module aes_engine
   end 
 
   // Clear data reg
-  always_comb
+  always_ff @(posedge clk_i or negedge rst_ni)
   begin
     if(ctrl_i.clear)
-      data_reg = '0;
+      data_reg <= '0;
   end
 
 assign aes_input.ready = aes_input.valid;
