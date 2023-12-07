@@ -26,15 +26,15 @@
  *     0  |  0x0040  |  31: 0  |  0xffffffff  ||  INPUT_ADDR
  *     1  |  0x0044  |  31: 0  |  0xffffffff  ||  OUTPUT_ADDR
  *     2  |  0x0048  |  31: 0  |  0xffffffff  ||  KEY_255_224
- *     3  |  0x004b  |  31: 0  |  0xffffffff  ||  KEY_223_192
+ *     3  |  0x004C  |  31: 0  |  0xffffffff  ||  KEY_223_192
  *     4  |  0x0050  |  31: 0  |  0xffffffff  ||  KEY_191_160
  *     5  |  0x0054  |  31: 0  |  0xffffffff  ||  KEY_159_128
  *     6  |  0x0058  |  31: 0  |  0xffffffff  ||  KEY_127_96
- *     7  |  0x005b  |  31: 0  |  0xffffffff  ||  KEY_95_64
+ *     7  |  0x005C  |  31: 0  |  0xffffffff  ||  KEY_95_64
  *     8  |  0x0060  |  31: 0  |  0xffffffff  ||  KEY_63_32
  *     9  |  0x0064  |  31: 0  |  0xffffffff  ||  KEY_31_0
-
- *
+ *    10  |  0x0068  |  31: 0  |  0xffffffff  ||  KEY_MODE
+ *    11  |  0x006C  |  31: 0  |  0xffffffff  ||  DATA_BYTE_LENGTH
  * ================================================================================
  *
  */
