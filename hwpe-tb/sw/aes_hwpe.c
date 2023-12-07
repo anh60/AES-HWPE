@@ -30,7 +30,7 @@ void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_leng
         // Unsupported key length!!
         break;
     }
-    hwpe_key_mode_set(key_mode);
+    hwpe_key_mode_set((uint32_t)key_mode);
     return;
 }
 
