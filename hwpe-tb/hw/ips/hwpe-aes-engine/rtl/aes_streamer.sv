@@ -73,8 +73,8 @@ module aes_streamer
     .clear_i            ( clear_i                		),
     .tcdm               ( tcdm_fifo_0            		), // this syntax is necessary for Verilator as hwpe_stream_source expects an array of interfaces
     .stream             ( aes_input_prefifo.source       	),
-    .ctrl_i             ( ctrl_i.plaintext_source_ctrl   	),
-    .flags_o            ( flags_o.plaintext_source_flags	),
+    .ctrl_i             ( ctrl_i.aes_input_source_ctrl   	),
+    .flags_o            ( flags_o.aes_input_source_flags	),
     .tcdm_fifo_ready_o  ( aes_input_tcdm_fifo_ready      	)
   );
 
@@ -87,8 +87,8 @@ module aes_streamer
     .clear_i     ( clear_i              		),
     .tcdm        ( tcdm_fifo_1          		), // this syntax is necessary for Verilator as hwpe_stream_source expects an array of interfaces
     .stream      ( aes_output_postfifo.sink      	),
-    .ctrl_i      ( ctrl_i.chipertext_sink_ctrl   	),
-    .flags_o     ( flags_o.chipertext_sink_flags 	)
+    .ctrl_i      ( ctrl_i.aes_output_sink_ctrl   	),
+    .flags_o     ( flags_o.aes_output_sink_flags 	)
   );
 
 
