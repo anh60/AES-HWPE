@@ -28,6 +28,7 @@ module aes_fsm (
   logic request_count_enable = '0;
   logic [31:0] data_size = '0;
   logic [15:0] block_counter = '0;
+  logic block_counter_enable = '0;
 
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
@@ -48,6 +49,16 @@ module aes_fsm (
       ctrl_engine_o.request_counter <= 0;
     else if(request_count_enable) 
       ctrl_engine_o.request_counter <= ctrl_engine_o.request_counter + 1;       
+  end 
+
+  always_ff @(posedge clk or negedge reset_n)
+  begin : fsm_seq_block_counter
+    if (~reset_n) 
+      block_counter <= 0;
+    else if(clear)
+      block_counter <= 0;
+    else if(block_counter_enable) 
+      block_counter <= block_counter + 1;       
   end 
 
   always_comb
@@ -138,6 +149,7 @@ module aes_fsm (
 
     //fsm 
     request_count_enable = '0;
+    block_counter_enable = '0;
 
     // engine
     ctrl_engine_o.clear   = '0;
@@ -197,7 +209,7 @@ module aes_fsm (
 
       AES_MEMORY_WRITE_DONE: begin
         ctrl_engine_o.clear = '1;
-        block_counter = block_counter + 1;
+        block_counter_enable = '1;
       end
 
       AES_FINISHED: begin 
