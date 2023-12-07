@@ -90,7 +90,7 @@ module aes_fsm (
          if (streamer_flags_i.aes_input_source_flags.done) begin
             next_state = AES_REQUEST_DATA;
 
-            if(data_size == 0)
+            if(data_size == 0 || data_size[31]) // If data_size[31] = 1, overflow..
               next_state = AES_WORKING;
             
             if(ctrl_engine_o.request_counter == 3)
