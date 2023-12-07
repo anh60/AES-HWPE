@@ -79,8 +79,8 @@ module aes_fsm (
          if (streamer_flags_i.aes_input_source_flags.done) begin
             next_state = AES_REQUEST_DATA;
 
-            if(ctrl_engine_o.data_size == 0)
-              next_state = AES_WORKING;
+            //if(ctrl_engine_o.data_size == 0)
+            //  next_state = AES_WORKING;
             
             if(ctrl_engine_o.request_counter == 3)
               next_state = AES_WORKING;
@@ -116,7 +116,7 @@ module aes_fsm (
       //FINSIHED -> IDLE
       AES_FINISHED: begin
           next_state = AES_REQUEST_DATA;
-          if(ctrl_engine_o.data_size == 0)
+          //if(ctrl_engine_o.data_size == 0)
             next_state = AES_IDLE;
       end
 
