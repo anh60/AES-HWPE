@@ -19,9 +19,6 @@
  */
 
 #include <stdint.h>
-// #include "aes_hwpe.h"
-#include "inc/hwpe_stimuli_chipertext.h"
-#include "inc/hwpe_stimuli_plaintext.h"
 
 #include "aes_hwpe.c"
 #include "archi_hwpe.h"
@@ -30,17 +27,18 @@
 #define KEY_BIT_LENGTH 256
 uint32_t key[KEY_BIT_LENGTH / 32] = {1, 2, 3, 4, 5, 6, 7, 8};
 
+uint32_t data_to_encrypt[] = {0x12, 0x23, 0x45, 0x56};
+uint32_t encryption_memory[50];
+uint32_t decryption_memory[50];
+
 int main()
 {
   volatile int errors = 0;
 
-  uint8_t *input_addr = stim_plaintext;
-  uint8_t *output_addr = stim_chipertext;
-
   aes_hwpe_init();
 
   // job-dependent registers
-  aes_hwpe_configure(input_addr, output_addr, KEY_BIT_LENGTH / 32);
+  aes_hwpe_configure(&data_to_encrypt, &encryption_memory, sizeof(data_to_encrypt), KEY_BIT_LENGTH / 32);
 
   aes_hwpe_key_set(key);
 

@@ -60,6 +60,16 @@ static inline void hwpe_output_addr_set(unsigned int value)
   HWPE_WRITE(value, HWPE_OUTPUT_ADDR);
 }
 
+static inline void hwpe_key_byte_length_set(unsigned int value)
+{
+  HWPE_WRITE(value, HWPE_KEY_BYTE_LENGTH);
+}
+
+static inline void hwpe_data_byte_length_set(unsigned int value)
+{
+  HWPE_WRITE(value, HWPE_DATA_BYTE_LENGTH);
+}
+
 static inline void hwpe_key_set(uint32_t *value)
 {
 

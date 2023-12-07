@@ -4,12 +4,13 @@
 #include "archi_hwpe.h"
 #include "hal_hwpe.h"
 
-void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint8_t key_length)
+void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_length, uint32_t key_byte_length)
 {
     // job-dependent registers
-    hwpe_input_addr_set((unsigned int)input);
-    hwpe_output_addr_set((unsigned int)output);
-
+    hwpe_input_addr_set((uint32_t)input);
+    hwpe_output_addr_set((uint32_t)output);
+    hwpe_data_data_byte_length_set(data_byte_length);
+    hwpe_key_byte_length_set(key_byte_length);
     return;
 }
 
