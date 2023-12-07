@@ -9,7 +9,7 @@ void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_leng
     // job-dependent registers
     hwpe_input_addr_set((uint32_t)input);
     hwpe_output_addr_set((uint32_t)output);
-    hwpe_data_data_byte_length_set(data_byte_length);
+    hwpe_data_byte_length_set(data_byte_length);
     hwpe_key_byte_length_set(key_byte_length);
     return;
 }
