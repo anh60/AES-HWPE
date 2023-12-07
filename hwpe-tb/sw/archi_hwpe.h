@@ -51,5 +51,7 @@
 #define HWPE_KEY_95_64 0x5C
 #define HWPE_KEY_63_32 0x60
 #define HWPE_KEY_31_0 0x64
+#define HWPE_KEY_MODE 0x68
+#define HWPE_DATA_BYTE_LENGTH 0x6C
 
 #endif

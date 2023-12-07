@@ -19,28 +19,30 @@
  */
 
 #include <stdint.h>
-// #include "aes_hwpe.h"
-#include "inc/hwpe_stimuli_chipertext.h"
-#include "inc/hwpe_stimuli_plaintext.h"
 
 #include "aes_hwpe.c"
 #include "archi_hwpe.h"
 #include "hal_hwpe.h"
 
 #define KEY_BIT_LENGTH 256
-uint32_t key[KEY_BIT_LENGTH / 32] = {1, 2, 3, 4, 5, 6, 7, 8};
+uint8_t key[KEY_BIT_LENGTH / 8] = {
+    76, 72, 220, 204, 32, 167, 20, 14,
+    148, 91, 88, 61, 9, 155, 113, 44,
+    30, 24, 250, 122, 39, 240, 46, 116,
+    217, 65, 86, 148, 87, 36, 202, 114};
+
+uint8_t data_to_encrypt[] = {0x12, 0x23, 0x45, 0x56};
+uint8_t encryption_memory[50];
+uint8_t decryption_memory[50];
 
 int main()
 {
   volatile int errors = 0;
 
-  uint8_t *input_addr = stim_plaintext;
-  uint8_t *output_addr = stim_chipertext;
-
   aes_hwpe_init();
 
-  // job-dependent registers
-  aes_hwpe_configure(input_addr, output_addr, KEY_BIT_LENGTH / 32);
+  // Configuring the AES HWPE with the input location, output location, data size and key length.
+  aes_hwpe_configure(&data_to_encrypt[0], &encryption_memory[0], sizeof(data_to_encrypt), KEY_BIT_LENGTH);
 
   aes_hwpe_key_set(key);
 
@@ -49,14 +51,6 @@ int main()
 
   // wait for end of computation
   // Sleeps until the HWPE interrupts with a hwpe.done flag.
-  asm volatile("wfi" ::: "memory");
-
-  aes_hwpe_start();
-
-  asm volatile("wfi" ::: "memory");
-
-  aes_hwpe_start();
-
   asm volatile("wfi" ::: "memory");
 
   aes_hwpe_deinit();
