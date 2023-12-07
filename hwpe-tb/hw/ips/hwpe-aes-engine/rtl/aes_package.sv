@@ -44,9 +44,8 @@ package aes_package;
     logic [1:0] key_size;
   } ctrl_engine_t; 
 
-    typedef struct packed {
-    logic unsigned [$clog2(AES_BLOCK_BIT_LENGTH):0] chipertext_32byte_chunck_count; // 1 bit more as cnt starts from 1, not 0
-    logic chipertext_valid;
+  typedef struct packed {
+    
   } flags_engine_t;
 
   // AES FSM states with explicit binary values. Helpfull when debugging.
