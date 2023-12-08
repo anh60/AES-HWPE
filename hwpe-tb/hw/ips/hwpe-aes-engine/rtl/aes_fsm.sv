@@ -27,6 +27,8 @@ module aes_fsm (
   ctrl_streamer_t streamer_ctrl_cfg;
   logic request_count_enable = '0;
   logic [31:0] data_size = '0;
+  logic [15:0] block_counter = '0;
+  logic block_counter_enable = '0;
 
   // AES FSM: sequential process.
   always_ff @(posedge clk or negedge reset_n)
@@ -49,7 +51,15 @@ module aes_fsm (
       ctrl_engine_o.request_counter <= ctrl_engine_o.request_counter + 1;       
   end 
 
-
+  always_ff @(posedge clk or negedge reset_n)
+  begin : fsm_seq_block_counter
+    if (~reset_n) 
+      block_counter <= 0;
+    else if(clear)
+      block_counter <= 0;
+    else if(block_counter_enable) 
+      block_counter <= block_counter + 1;       
+  end 
 
   always_comb
   begin : fsm_comb_next_state
@@ -80,7 +90,7 @@ module aes_fsm (
          if (streamer_flags_i.aes_input_source_flags.done) begin
             next_state = AES_REQUEST_DATA;
 
-            if(data_size == 0)
+            if(data_size == 0) 
               next_state = AES_WORKING;
             
             if(ctrl_engine_o.request_counter == 3)
@@ -111,14 +121,18 @@ module aes_fsm (
       AES_MEMORY_WRITE_WAIT: begin
           next_state = AES_SEND_DATA;
           if(ctrl_engine_o.request_counter == 3)
-            next_state = AES_FINISHED;
+            next_state = AES_MEMORY_WRITE_DONE;
       end 
+
+      AES_MEMORY_WRITE_DONE: begin
+        next_state = AES_REQUEST_DATA;
+        if(data_size == 0)
+          next_state = AES_FINISHED;
+      end
 
       //FINSIHED -> IDLE
       AES_FINISHED: begin
-          next_state = AES_REQUEST_DATA;
-          if(data_size == 0)
-            next_state = AES_IDLE;
+        next_state = AES_IDLE;
       end
 
       // Default case to handle unexpected states
@@ -135,6 +149,7 @@ module aes_fsm (
 
     //fsm 
     request_count_enable = '0;
+    block_counter_enable = '0;
 
     // engine
     ctrl_engine_o.clear   = '0;
@@ -172,7 +187,15 @@ module aes_fsm (
       AES_REQUEST_DATA_WAIT: begin 
         if (streamer_flags_i.aes_input_source_flags.done) begin
             request_count_enable = '1;
-            data_size = data_size - 4;
+
+            // DONT LET DATA_SIZE OVERFLOW!!!!!!!!
+            data_size = data_size - 1;
+            if(data_size != 0)
+              data_size = data_size - 1;
+            if(data_size != 0)
+              data_size = data_size - 1;
+            if(data_size != 0)
+              data_size = data_size - 1;
         end
       end
 
@@ -184,15 +207,18 @@ module aes_fsm (
         streamer_ctrl_o.aes_output_sink_ctrl.req_start = 1'b1;
       end 
 
-
       AES_SEND_DATA_WAIT: begin 
-          ctrl_engine_o.data_out_valid = '1;
-
+        ctrl_engine_o.data_out_valid = '1;
       end 
 
       AES_MEMORY_WRITE_WAIT: begin 
-          request_count_enable = '1; 
+        request_count_enable = '1; 
       end 
+
+      AES_MEMORY_WRITE_DONE: begin
+        ctrl_engine_o.clear = '1;
+        block_counter_enable = '1;
+      end
 
       AES_FINISHED: begin 
         slave_ctrl_o.done = 1'b1;
@@ -213,7 +239,7 @@ always_comb
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.line_length = 1;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_stride = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_length = 1;
-    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[HWPE_INPUT_ADDR] + ($unsigned(ctrl_engine_o.request_counter) * 4);
+    streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[HWPE_INPUT_ADDR] + ($unsigned(ctrl_engine_o.request_counter) * 4) + ($unsigned(block_counter) * 16);
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_roll   = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.loop_outer  = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.realign_type = '0;
@@ -223,7 +249,7 @@ always_comb
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.line_length = 1;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.feat_stride = '0;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.feat_length = 1;
-    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[HWPE_OUTPUT_ADDR] + ($unsigned(ctrl_engine_o.request_counter) * 4);
+    streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.base_addr   = reg_file_i.hwpe_params[HWPE_OUTPUT_ADDR] + ($unsigned(ctrl_engine_o.request_counter) * 4) + ($unsigned(block_counter) * 16);
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.feat_roll   = '0;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.loop_outer  = '0;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.realign_type = '0;
