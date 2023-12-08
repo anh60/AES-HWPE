@@ -51,7 +51,7 @@ module aes_engine
 
     .block(core_input),
     .result(core_output),
-    .result_valid(core_output_valid);
+    .result_valid(core_output_valid)
   );
 
 
