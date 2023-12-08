@@ -111,7 +111,7 @@ end
 
   // Stream data out
   always_comb
-  begin data_output
+  begin:  data_output
     if(ctrl_i.request_counter == 0)
       aes_output.data = data_reg[31:0];
     else if(ctrl_i.request_counter == 1)
@@ -129,7 +129,7 @@ end
 
   // Clear data reg
   always_ff @(posedge clk_i or negedge rst_ni)
-  begin data_clear
+  begin: data_clear
     if(ctrl_i.clear)
       data_reg <= '0;
   end
