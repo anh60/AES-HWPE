@@ -1,0 +1,26 @@
+package:
+  name: aes
+  authors:
+    - "Andreas Hølleland"
+    - "Marcus Tjomsaas"
+
+
+sources:
+  - include_dirs:
+      - src/rtl
+    files:
+      # Source files grouped in levels. Files in level 0 have no dependencies on files in this
+      # package. Files in level 1 only depend on files in level 0, files in level 2 on files in
+      # levels 1 and 0, etc. Files within a level are ordered alphabetically.
+      # Level 0
+      - src/rtl/aes_sbox.v
+      - src/rtl/inv_sbox.v
+      - src/rtl/aes_mem.v
+
+      # Level 1
+      - src/rtl/aes_decipher_block.v
+      - src/rtl/aes_encipher_block.v
+      # Level 2
+      - src/rtl/aes_core.v
+      #level 3
+      - src/aes.v
