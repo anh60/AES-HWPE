@@ -153,9 +153,13 @@ module aes_fsm (
 
     // engine
     ctrl_engine_o.clear   = '0;
-    ctrl_engine_o.start   = '0;
     ctrl_engine_o.enable  = '0;
+
+    ctrl_engine_o.core_start   = '0;
+    ctrl_engine_o.core_init_key   = '0;
+
     ctrl_engine_o.data_out_valid  = '0;
+
 
 
 
@@ -201,6 +205,7 @@ module aes_fsm (
 
       AES_WORKING: begin
         //Do AES encryption....
+        ctrl_engine_o.core_start   = '1;
       end
 
       AES_SEND_DATA: begin 
@@ -230,9 +235,25 @@ module aes_fsm (
 
 always_comb
   begin: fsm_comb_reg
+
+    //AES CORE CONFIG
+    ctrl_engine_o.core_encode_decode  = reg_file_i.hwpe_params[HWPE_ENCODE_DECODE_MODE];
+    ctrl_engine_o.core_key[255:224]   = reg_file_i.hwpe_params[HWPE_KEY_255_224]; 
+    ctrl_engine_o.core_key[223:192]   = reg_file_i.hwpe_params[HWPE_KEY_223_192]; 
+    ctrl_engine_o.core_key[191:160]   = reg_file_i.hwpe_params[HWPE_KEY_191_160]; 
+    ctrl_engine_o.core_key[159:128]   = reg_file_i.hwpe_params[HWPE_KEY_159_128]; 
+    ctrl_engine_o.core_key[127:96]    = reg_file_i.hwpe_params[HWPE_KEY_127_96]; 
+    ctrl_engine_o.core_key[95:64]     = reg_file_i.hwpe_params[HWPE_KEY_95_64]; 
+    ctrl_engine_o.core_key[63:32]     = reg_file_i.hwpe_params[HWPE_KEY_63_32]; 
+    ctrl_engine_o.core_key[31:0]      = reg_file_i.hwpe_params[HWPE_KEY_31_0]; 
+    ctrl_engine_o.core_key_mode       = reg_file_i.hwpe_params[HWPE_KEY_MODE] ;
+
+
+    ///HOW MUCH DATA TO ENCRYPT/DECRYPT
     ctrl_engine_o.data_size = reg_file_i.hwpe_params[HWPE_DATA_BYTE_LENGTH];
-    //Change the number four to actually represent the size of the register
-    //aes_input stream
+
+
+    //AES STREAMER INPUT REGISTER ADDRESS
     streamer_ctrl_cfg = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.trans_size  = 1;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.line_stride = '0;
@@ -243,7 +264,7 @@ always_comb
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_roll   = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.loop_outer  = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.realign_type = '0;
-    // aes_output stream 
+    //AES STREAMER OUTPUT REGISTER ADDRESS
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.trans_size  = 1;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.line_stride = '0;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.line_length = 1;

@@ -21,6 +21,8 @@ package aes_package;
   parameter int unsigned HWPE_KEY_31_0 = 9;
   parameter int unsigned HWPE_KEY_MODE = 10;
   parameter int unsigned HWPE_DATA_BYTE_LENGTH = 11;
+  parameter int unsigned HWPE_ENCODE_DECODE_MODE= 12;
+
 
 
   typedef struct packed {
@@ -35,17 +37,27 @@ package aes_package;
 
 
   typedef struct packed {
+    //Defualt
     logic clear;
     logic enable;
-    logic start;
+
+    //Core
+    logic core_encode_decode;
+    logic core_init_key;
+    logic core_start;
+    logic[255:0] core_key; 
+    logic core_key_mode;
+
+
+    //FSM
     logic data_out_valid;
     logic [1:0] request_counter;
     logic [31:0] data_size;
-    logic [1:0] key_size;
   } ctrl_engine_t; 
 
   typedef struct packed {
-    logic enable;
+    logic core_ready;
+    logic core_done; 
   } flags_engine_t;
 
   // AES FSM states with explicit binary values. Helpfull when debugging.
