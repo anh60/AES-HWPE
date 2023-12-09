@@ -11,7 +11,7 @@ module tb_hwpe;
 
   // parameters
   parameter PROB_STALL = 0.1;
-  parameter N_EVT   = 8,
+  parameter N_EVT   = 8;
   parameter NC = 8;
   parameter MP = 2;
   parameter ID = 10;
