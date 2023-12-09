@@ -13,8 +13,8 @@ uint32_t *encrypt_mem_address = (uint32_t *)ENCRYPTION_MEMORY;
 uint32_t *decrypt_mem_address = (uint32_t *)DECRYPTION_MEMORY;
 
 /*// Could also do this!
-uint8_t encryption_memory[50];
-uint8_t decryption_memory[50];
+uint32_t encryption_memory[50];
+uint32_t decryption_memory[50];
 */
 
 #define KEY_BIT_LENGTH 256
@@ -36,7 +36,7 @@ int main()
       .output_address = encrypt_mem_address,
       .data_length = sizeof(plaintext),
       .key_mode = KEY_MODE_256,
-      .key = &aes_key, // This initializes all elements of the key array to 0
+      .key = aes_key,
       .encryption_decryption_mode = ENCRYPT};
 
   aes_hwpe_init();
