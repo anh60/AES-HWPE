@@ -12,7 +12,6 @@ module aes_ctrl
   parameter int unsigned N_CORES         = 2,
   parameter int unsigned N_CONTEXT       = 2,
   parameter int unsigned N_IO_REGS       = 16,
-  parameter int unsigned N_EVT           = 8,
   parameter int unsigned ID              = 10,
   parameter int unsigned ULOOP_HARDWIRED = 0
 )
@@ -24,7 +23,7 @@ module aes_ctrl
   output logic                                  clear_o,
 
   // events
-  output logic [N_CORES-1:0][N_EVT-1:0] evt_o,
+  output logic [N_CORES-1:0][REGFILE_N_EVT-1:0] evt_o,
 
   // ctrl & flags
   output ctrl_streamer_t                        ctrl_streamer_o,

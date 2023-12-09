@@ -11,7 +11,6 @@ module tb_hwpe;
 
   // parameters
   parameter PROB_STALL = 0.1;
-  parameter N_EVT   = 8;
   parameter NC = 8;
   parameter MP = 2;
   parameter ID = 10;
@@ -168,7 +167,6 @@ module tb_hwpe;
 
   aes_top_wrap #(
     .N_CORES          ( NC ),
-    .N_EVT            (N_EVT),
     .MP               ( MP ),
     .ID               ( ID )
   ) i_hwpe_top_wrap (
