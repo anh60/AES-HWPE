@@ -64,6 +64,7 @@ package aes_package;
   typedef enum { 
       AES_IDLE, 
       AES_STARTING,
+      AES_INIT_KEY,
       AES_REQUEST_DATA,
       AES_REQUEST_DATA_WAIT,
       AES_WORKING,
