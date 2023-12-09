@@ -69,8 +69,8 @@ uint8_t plaintext[] = {
     0x23,
     0x24,
 };
-uint8_t encryption_memory[50] = {0xFA};
-uint8_t decryption_memory[50] = {0xFB};
+volatile uint8_t encryption_memory[50] = {0xFA};
+volatile uint8_t decryption_memory[50] = {0xFB};
 
 int main()
 {
