@@ -63,11 +63,11 @@ package aes_package;
   // AES FSM states with explicit binary values. Helpfull when debugging.
   typedef enum { 
       AES_IDLE, 
-      AES_STARTING,
-      AES_INIT_KEY,
+      AES_START_KEY,
+      AES_WAIT_KEY,
       AES_REQUEST_DATA,
       AES_REQUEST_DATA_WAIT,
-      AES_WORKING,
+      AES_START_CORE,
       AES_WAIT_CORE,
       AES_SEND_DATA,
       AES_SEND_DATA_WAIT,

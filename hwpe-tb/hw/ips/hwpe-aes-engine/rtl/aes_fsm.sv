@@ -69,17 +69,17 @@ module aes_fsm (
       //IDLE -> STARTING
       AES_IDLE: begin
         if (slave_flags_i.start) begin
-          next_state = AES_STARTING;
+          next_state = AES_START_KEY;
         end
       end
       
       //STARTING -> WORKING
-      AES_STARTING: begin
+      AES_START_KEY: begin
         if(flags_engine_i.core_ready)
-          next_state = AES_INIT_KEY;
+          next_state = AES_WAIT_KEY;
       end 
       
-      AES_INIT_KEY: begin 
+      AES_WAIT_KEY: begin 
         if(flags_engine_i.core_ready)
           next_state = AES_REQUEST_DATA;
 
@@ -99,19 +99,19 @@ module aes_fsm (
             next_state = AES_REQUEST_DATA;
 
             if(data_size == 0) 
-              next_state = AES_WORKING;
+              next_state = AES_START_CORE;
             
             if(ctrl_engine_o.request_counter == 3)
-              next_state = AES_WORKING;
+              next_state = AES_START_CORE;
             
          end
       end
 
-      AES_WORKING: begin
-        next_state = AES_WORKING_CORE;
+      AES_START_CORE: begin
+        next_state = AES_WAIT_CORE;
       end 
 
-      AES_WORKING_CORE: begin
+      AES_WAIT_CORE: begin
         //Wait for AES encryption here...
         if(flags_engine_i.core_ready)
           next_state = AES_SEND_DATA;
@@ -189,13 +189,13 @@ module aes_fsm (
         ctrl_engine_o.clear  = 1'b1;
       end 
 
-      AES_STARTING: begin 
+      AES_START_KEY: begin 
         //Engine start
         ctrl_engine_o.core_init_key  = 1'b1;
         data_size = ctrl_engine_o.data_size;
       end 
 
-      AES_INIT_KEY: begin 
+      AES_WAIT_KEY: begin 
         //Wait for aes core to init key.
       end 
 
@@ -218,12 +218,12 @@ module aes_fsm (
         end
       end
 
-      AES_WORKING: begin
+      AES_START_CORE: begin
         //Start core
         ctrl_engine_o.core_start   = '1;
       end
 
-      AES_WORKING_CORE: begin
+      AES_WAIT_CORE: begin
         //Wait for core to finish
       end 
       
