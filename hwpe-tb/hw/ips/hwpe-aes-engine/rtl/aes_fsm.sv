@@ -57,6 +57,8 @@ module aes_fsm (
       block_counter <= 0;
     else if(clear)
       block_counter <= 0;
+    else if(current_state == AES_IDLE)
+        block_counter <= 0;
     else if(block_counter_enable) 
       block_counter <= block_counter + 1;       
   end 
