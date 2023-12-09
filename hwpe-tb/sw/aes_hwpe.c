@@ -19,12 +19,8 @@ void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_leng
         key_mode = 0;
         break;
 
-    case 196:
-        key_mode = 1;
-        break;
-
     case 256:
-        key_mode = 2;
+        key_mode = 1;
         break;
 
     default:
