@@ -77,8 +77,8 @@ int main()
   volatile int errors = 0;
 
   uint8_t *p_plaintext = plaintext;
-  uint8_t *p_encryption_memory = encryption_memory;
-  uint8_t *p_decryption_memory = decryption_memory;
+  volatile uint8_t *p_encryption_memory = encryption_memory;
+  volatile uint8_t *p_decryption_memory = decryption_memory;
   aes_hwpe_init();
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
