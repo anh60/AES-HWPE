@@ -2,7 +2,7 @@ hw-aes-engine:
   authors:
     - "Andreas Hølleland"
     - "Marcus Tjomsaas"
-    
+
   incdirs : [
     src/rtl
   ]
@@ -20,8 +20,5 @@ hw-aes-engine:
       #level 3
       - src/aes.v
   ]
-  vlog_opts : [
-    "-L hwpe_ctrl_lib",
-    "-L hwpe_stream_lib"
-  ]
+
 
