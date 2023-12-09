@@ -1,4 +1,8 @@
 hw-aes-engine:
+  authors:
+    - "Andreas Hølleland"
+    - "Marcus Tjomsaas"
+    
   incdirs : [
     src/rtl
   ]
