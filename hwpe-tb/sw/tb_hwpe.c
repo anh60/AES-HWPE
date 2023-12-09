@@ -87,7 +87,7 @@ int main()
   aes_hwpe_key_set(key);
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
-  aes_hwpe_configure(plaintext, encrypt_mem_address, sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
+  aes_hwpe_configure(&plaintext[0], encrypt_mem_address, sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
   // BLOCKING FUNCTION!
   aes_hwpe_start();
 
@@ -96,7 +96,7 @@ int main()
   asm volatile("wfi" ::: "memory");
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
-  aes_hwpe_configure(encrypt_mem_address, decrypt_mem_address, 8, KEY_BIT_LENGTH, DECRYPT);
+  aes_hwpe_configure(encrypt_mem_address, decrypt_mem_address, 8 * 3, KEY_BIT_LENGTH, DECRYPT);
   aes_hwpe_start();
 
   // wait for end of computation
