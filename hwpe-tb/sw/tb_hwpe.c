@@ -98,7 +98,7 @@ int main()
   asm volatile("wfi" ::: "memory");
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
-  aes_hwpe_configure(p_plaintext, encrypt_mem_address, sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
+  aes_hwpe_configure(encrypt_mem_address, decrypt_mem_address, sizeof(plaintext), KEY_BIT_LENGTH, DECRYPT);
   aes_hwpe_key_set(key);
   // BLOCKING FUNCTION!
   aes_hwpe_start();
