@@ -179,7 +179,7 @@ module aes_fsm (
 
       AES_STARTING: begin 
         //Engine start
-        ctrl_engine_o.start  = 1'b1;
+        ctrl_engine_o.core_start  = 1'b1;
         data_size = ctrl_engine_o.data_size;
         //Streamer request
       end 
