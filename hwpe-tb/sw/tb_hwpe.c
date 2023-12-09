@@ -31,7 +31,7 @@ uint8_t key[KEY_BIT_LENGTH / 8] = {
     0x1E, 0x18, 0xFA, 0x7A, 0x27, 0xF0, 0x2E, 0x74,
     0xD9, 0x41, 0x56, 0x94, 0x57, 0x24, 0xCA, 0x72};
 
-uint8_t data_to_encrypt[] = {
+uint8_t plaintext[] = {
     0x01,
     0x02,
     0x03,
@@ -80,14 +80,18 @@ int main()
   aes_hwpe_init();
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
-  aes_hwpe_configure(&data_to_encrypt[0], &encryption_memory[0], sizeof(data_to_encrypt), KEY_BIT_LENGTH);
-
+  aes_hwpe_configure(&plaintext[0], &encryption_memory[0], sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
   aes_hwpe_key_set(key);
   // BLOCKING FUNCTION!
   aes_hwpe_start();
 
   // wait for end of computation
   // Sleeps until the HWPE interrupts with a hwpe.done flag.
+  asm volatile("wfi" ::: "memory");
+
+  aes_hwpe_configure(&encryption_memory[0], &decryption_memory[0], sizeof(encryption_memory), KEY_BIT_LENGTH, DECRYPT);
+  aes_hwpe_start();
+
   asm volatile("wfi" ::: "memory");
 
   aes_hwpe_deinit();

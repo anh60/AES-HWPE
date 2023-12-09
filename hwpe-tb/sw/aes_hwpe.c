@@ -4,12 +4,13 @@
 #include "archi_hwpe.h"
 #include "hal_hwpe.h"
 
-void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_length, uint32_t key_bit_length)
+void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_length, uint32_t key_bit_length, uint32_t encrypt_decrypt)
 {
     // job-dependent registers
     hwpe_input_addr_set((uint32_t)input);
     hwpe_output_addr_set((uint32_t)output);
     hwpe_data_byte_length_set(data_byte_length);
+    hwpe_aes_enc_dec_set(encrypt_decrypt);
 
     uint16_t key_mode = 0xFFFF;
     switch (key_bit_length)
@@ -31,6 +32,7 @@ void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_leng
         break;
     }
     hwpe_key_mode_set((uint32_t)key_mode);
+
     return;
 }
 

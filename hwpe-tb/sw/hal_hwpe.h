@@ -43,6 +43,8 @@
 #define HWPE_ADDR_BASE ARCHI_FC_HWPE_ADDR
 #define HWPE_ADDR_SPACE 0x00000100
 
+#define ENCRYPT 1
+#define DECRYPT 0
 // For all the following functions we use __builtin_pulp_OffsetedWrite and __builtin_pulp_OffsetedRead
 // instead of classic load/store because otherwise the compiler is not able to correctly factorize
 // the HWPE base in case several accesses are done, ending up with twice more code
@@ -81,6 +83,11 @@ static inline void hwpe_key_set(uint32_t *value)
   HWPE_WRITE(value[2], HWPE_KEY_95_64);
   HWPE_WRITE(value[1], HWPE_KEY_63_32);
   HWPE_WRITE(value[0], HWPE_KEY_31_0);
+}
+
+static inline void hwpe_aes_enc_dec_set(unsigned int value)
+{
+  HWPE_WRITE(value, HWPE_ENCRYPT_DECRYPT_MODE);
 }
 
 static inline void hwpe_trigger_job()
