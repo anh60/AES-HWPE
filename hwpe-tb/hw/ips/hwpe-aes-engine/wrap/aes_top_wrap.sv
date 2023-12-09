@@ -81,13 +81,12 @@ module aes_top_wrap
     periph_r_data  = periph.r_data;
     periph_r_valid = periph.r_valid;
     periph_r_id    = periph.r_id;
-    REGFILE_N_EVT = 8;
-
   end
 
   aes_top #(
     .N_CORES ( N_CORES ),
     .MP      ( MP      ),
+    .N_EVT   (N_EVT    ),
     .ID      ( ID      )
   ) i_mac_top (
     .clk_i       ( clk_i       ),
