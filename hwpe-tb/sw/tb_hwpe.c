@@ -73,8 +73,10 @@ uint8_t encryption_memory[50] = {0xFA};
 uint8_t decryption_memory[50] = {0xFB};
 
 #define ENCRYPTION_MEMORY 0x1C010100
+#define DECRYPTION_MEMORY 0x1C010200
 
-volatile uint8_t *ptr = (volatile int *)ENCRYPTION_MEMORY;
+volatile int *encrypt_mem_address = (volatile int *)ENCRYPTION_MEMORY;
+volatile int *decrypt_mem_address = (volatile int *)DECRYPTION_MEMORY;
 
 int main()
 {
@@ -86,7 +88,7 @@ int main()
   aes_hwpe_init();
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
-  aes_hwpe_configure(p_plaintext, ptr, sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
+  aes_hwpe_configure(p_plaintext, encrypt_mem_address, sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
   aes_hwpe_key_set(key);
   // BLOCKING FUNCTION!
   aes_hwpe_start();
