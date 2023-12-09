@@ -75,6 +75,8 @@ module aes_fsm (
       
       //STARTING -> WORKING
       AES_STARTING: begin
+        next_state = AES_STARTING;
+        if(flags_engine_i.core_ready)
           next_state = AES_REQUEST_DATA;
       end 
       
@@ -179,7 +181,7 @@ module aes_fsm (
 
       AES_STARTING: begin 
         //Engine start
-        ctrl_engine_o.core_start  = 1'b1;
+        ctrl_engine_o.core_init_key  = 1'b1;
         data_size = ctrl_engine_o.data_size;
         //Streamer request
       end 
