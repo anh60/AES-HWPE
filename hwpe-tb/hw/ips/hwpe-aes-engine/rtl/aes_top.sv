@@ -10,8 +10,8 @@ import hwpe_ctrl_package::*;
 module aes_top
 #(
   parameter int unsigned N_CORES = 2,
-  parameter int unsigned MP  = 2,
-  parameter int unsigned ID  = 10
+  parameter int unsigned MP      = 2,
+  parameter int unsigned ID      = 10
 )
 (
   // global signals
@@ -35,6 +35,7 @@ module aes_top
   ctrl_engine_t    engine_ctrl;
   flags_engine_t   engine_flags;
 
+  
   hwpe_stream_intf_stream #(
     .DATA_WIDTH(32)
   ) aes_input (

@@ -50,22 +50,22 @@
 #define HWPE_WRITE(value, offset) *(int *)(ARCHI_HWPE_ADDR_BASE + offset) = value
 #define HWPE_READ(offset) *(int *)(ARCHI_HWPE_ADDR_BASE + offset)
 
-static inline void hwpe_input_addr_set(unsigned int value)
+static inline void hwpe_input_addr_set(uint32_t *value)
 {
-  HWPE_WRITE(value, HWPE_INPUT_ADDR);
+  HWPE_WRITE((uint32_t)value, HWPE_INPUT_ADDR);
 }
 
-static inline void hwpe_output_addr_set(unsigned int value)
+static inline void hwpe_output_addr_set(uint32_t *value)
 {
-  HWPE_WRITE(value, HWPE_OUTPUT_ADDR);
+  HWPE_WRITE((uint32_t)value, HWPE_OUTPUT_ADDR);
 }
 
-static inline void hwpe_key_mode_set(unsigned int value)
+static inline void hwpe_key_mode_set(uint32_t value)
 {
   HWPE_WRITE(value, HWPE_KEY_MODE);
 }
 
-static inline void hwpe_data_byte_length_set(unsigned int value)
+static inline void hwpe_data_byte_length_set(uint32_t value)
 {
   HWPE_WRITE(value, HWPE_DATA_BYTE_LENGTH);
 }
@@ -81,6 +81,11 @@ static inline void hwpe_key_set(uint32_t *value)
   HWPE_WRITE(value[2], HWPE_KEY_95_64);
   HWPE_WRITE(value[1], HWPE_KEY_63_32);
   HWPE_WRITE(value[0], HWPE_KEY_31_0);
+}
+
+static inline void hwpe_aes_enc_dec_set(uint32_t value)
+{
+  HWPE_WRITE(value, HWPE_ENCRYPT_DECRYPT_MODE);
 }
 
 static inline void hwpe_trigger_job()

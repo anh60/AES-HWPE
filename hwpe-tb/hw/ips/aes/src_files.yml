@@ -1,0 +1,24 @@
+hw-aes-engine:
+  authors:
+    - "Andreas Hølleland"
+    - "Marcus Tjomsaas"
+
+  incdirs : [
+    src/rtl
+  ]
+  files : [
+      # Level 0
+      - src/rtl/aes_sbox.v
+      - src/rtl/inv_sbox.v
+      - src/rtl/aes_mem.v
+
+      # Level 1
+      - src/rtl/aes_decipher_block.v
+      - src/rtl/aes_encipher_block.v
+      # Level 2
+      - src/rtl/aes_core.v
+      #level 3
+      - src/aes.v
+  ]
+
+

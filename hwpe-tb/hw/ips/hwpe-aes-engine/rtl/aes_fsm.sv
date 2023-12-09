@@ -45,7 +45,7 @@ module aes_fsm (
   begin : fsm_seq_request_counter
     if (~reset_n) 
       ctrl_engine_o.request_counter <= 0;
-    else if(current_state == AES_WORKING || current_state == AES_STARTING)
+    else if(current_state == AES_START_CORE || current_state == AES_START_KEY)
       ctrl_engine_o.request_counter <= 0;
     else if(request_count_enable) 
       ctrl_engine_o.request_counter <= ctrl_engine_o.request_counter + 1;       
@@ -57,6 +57,8 @@ module aes_fsm (
       block_counter <= 0;
     else if(clear)
       block_counter <= 0;
+    else if(current_state == AES_IDLE)
+        block_counter <= 0;
     else if(block_counter_enable) 
       block_counter <= block_counter + 1;       
   end 
@@ -69,15 +71,23 @@ module aes_fsm (
       //IDLE -> STARTING
       AES_IDLE: begin
         if (slave_flags_i.start) begin
-          next_state = AES_STARTING;
+          next_state = AES_START_KEY;
         end
       end
       
       //STARTING -> WORKING
-      AES_STARTING: begin
-          next_state = AES_REQUEST_DATA;
+      AES_START_KEY: begin
+        if(flags_engine_i.core_ready)
+          next_state = AES_WAIT_KEY;
       end 
       
+      AES_WAIT_KEY: begin 
+        if(flags_engine_i.core_ready)
+          next_state = AES_REQUEST_DATA;
+
+      end 
+
+
       AES_REQUEST_DATA: begin
         if (streamer_flags_i.aes_input_source_flags.ready_start)
           next_state = AES_REQUEST_DATA_WAIT;
@@ -91,19 +101,23 @@ module aes_fsm (
             next_state = AES_REQUEST_DATA;
 
             if(data_size == 0) 
-              next_state = AES_WORKING;
+              next_state = AES_START_CORE;
             
             if(ctrl_engine_o.request_counter == 3)
-              next_state = AES_WORKING;
+              next_state = AES_START_CORE;
             
          end
       end
 
-      AES_WORKING: begin
-        //Wait for AES encryption here...
-        next_state = AES_SEND_DATA;
+      AES_START_CORE: begin
+        next_state = AES_WAIT_CORE;
       end 
 
+      AES_WAIT_CORE: begin
+        //Wait for AES encryption here...
+        if(flags_engine_i.core_ready)
+          next_state = AES_SEND_DATA;
+      end 
 
       AES_SEND_DATA: begin
         if (streamer_flags_i.aes_output_sink_flags.ready_start)
@@ -153,9 +167,13 @@ module aes_fsm (
 
     // engine
     ctrl_engine_o.clear   = '0;
-    ctrl_engine_o.start   = '0;
     ctrl_engine_o.enable  = '0;
+
+    ctrl_engine_o.core_start   = '0;
+    ctrl_engine_o.core_init_key   = '0;
+
     ctrl_engine_o.data_out_valid  = '0;
+
 
 
 
@@ -173,11 +191,14 @@ module aes_fsm (
         ctrl_engine_o.clear  = 1'b1;
       end 
 
-      AES_STARTING: begin 
+      AES_START_KEY: begin 
         //Engine start
-        ctrl_engine_o.start  = 1'b1;
+        ctrl_engine_o.core_init_key  = 1'b1;
         data_size = ctrl_engine_o.data_size;
-        //Streamer request
+      end 
+
+      AES_WAIT_KEY: begin 
+        //Wait for aes core to init key.
       end 
 
       AES_REQUEST_DATA: begin 
@@ -199,10 +220,15 @@ module aes_fsm (
         end
       end
 
-      AES_WORKING: begin
-        //Do AES encryption....
+      AES_START_CORE: begin
+        //Start core
+        ctrl_engine_o.core_start   = '1;
       end
 
+      AES_WAIT_CORE: begin
+        //Wait for core to finish
+      end 
+      
       AES_SEND_DATA: begin 
         streamer_ctrl_o.aes_output_sink_ctrl.req_start = 1'b1;
       end 
@@ -230,9 +256,25 @@ module aes_fsm (
 
 always_comb
   begin: fsm_comb_reg
+
+    //AES CORE CONFIG
+    ctrl_engine_o.core_encode_decode  = reg_file_i.hwpe_params[HWPE_ENCODE_DECODE_MODE];
+    ctrl_engine_o.core_key[255:224]   = reg_file_i.hwpe_params[HWPE_KEY_255_224]; 
+    ctrl_engine_o.core_key[223:192]   = reg_file_i.hwpe_params[HWPE_KEY_223_192]; 
+    ctrl_engine_o.core_key[191:160]   = reg_file_i.hwpe_params[HWPE_KEY_191_160]; 
+    ctrl_engine_o.core_key[159:128]   = reg_file_i.hwpe_params[HWPE_KEY_159_128]; 
+    ctrl_engine_o.core_key[127:96]    = reg_file_i.hwpe_params[HWPE_KEY_127_96]; 
+    ctrl_engine_o.core_key[95:64]     = reg_file_i.hwpe_params[HWPE_KEY_95_64]; 
+    ctrl_engine_o.core_key[63:32]     = reg_file_i.hwpe_params[HWPE_KEY_63_32]; 
+    ctrl_engine_o.core_key[31:0]      = reg_file_i.hwpe_params[HWPE_KEY_31_0]; 
+    ctrl_engine_o.core_key_mode       = reg_file_i.hwpe_params[HWPE_KEY_MODE] ;
+
+
+    ///HOW MUCH DATA TO ENCRYPT/DECRYPT
     ctrl_engine_o.data_size = reg_file_i.hwpe_params[HWPE_DATA_BYTE_LENGTH];
-    //Change the number four to actually represent the size of the register
-    //aes_input stream
+
+
+    //AES STREAMER INPUT REGISTER ADDRESS
     streamer_ctrl_cfg = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.trans_size  = 1;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.line_stride = '0;
@@ -243,7 +285,7 @@ always_comb
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.feat_roll   = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.loop_outer  = '0;
     streamer_ctrl_cfg.aes_input_source_ctrl.addressgen_ctrl.realign_type = '0;
-    // aes_output stream 
+    //AES STREAMER OUTPUT REGISTER ADDRESS
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.trans_size  = 1;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.line_stride = '0;
     streamer_ctrl_cfg.aes_output_sink_ctrl.addressgen_ctrl.line_length = 1;
