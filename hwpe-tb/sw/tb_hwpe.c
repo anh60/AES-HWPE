@@ -77,10 +77,13 @@ int main()
 {
   volatile int errors = 0;
 
+  uint8_t *p_plaintext = plaintext;
+  uint8_t *p_encryption_memory = encryption_memory;
+  uint8_t *p_decryption_memory = decryption_memory;
   aes_hwpe_init();
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
-  aes_hwpe_configure(&plaintext[0], &encryption_memory[0], sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
+  aes_hwpe_configure(p_plaintext, p_encryption_memory, sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
   aes_hwpe_key_set(key);
   // BLOCKING FUNCTION!
   aes_hwpe_start();
@@ -89,7 +92,7 @@ int main()
   // Sleeps until the HWPE interrupts with a hwpe.done flag.
   asm volatile("wfi" ::: "memory");
 
-  aes_hwpe_configure(&encryption_memory[0], &decryption_memory[0], 8 * 3, KEY_BIT_LENGTH, DECRYPT);
+  aes_hwpe_configure(p_encryption_memory, p_decryption_memory, 8, KEY_BIT_LENGTH, DECRYPT);
   aes_hwpe_start();
 
   asm volatile("wfi" ::: "memory");
