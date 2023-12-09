@@ -50,9 +50,9 @@
 #define HWPE_WRITE(value, offset) *(int *)(ARCHI_HWPE_ADDR_BASE + offset) = value
 #define HWPE_READ(offset) *(int *)(ARCHI_HWPE_ADDR_BASE + offset)
 
-static inline void hwpe_input_addr_set(unsigned int value)
+static inline void hwpe_input_addr_set(uint32_t *value)
 {
-  HWPE_WRITE(value, HWPE_INPUT_ADDR);
+  HWPE_WRITE(*value, HWPE_INPUT_ADDR);
 }
 
 static inline void hwpe_output_addr_set(unsigned int value)
