@@ -91,11 +91,6 @@ int main()
   // Sleeps until the HWPE interrupts with a hwpe.done flag.
   asm volatile("wfi" ::: "memory");
 
-  aes_hwpe_configure(p_encryption_memory, p_decryption_memory, 8, KEY_BIT_LENGTH, DECRYPT);
-  aes_hwpe_start();
-
-  asm volatile("wfi" ::: "memory");
-
   aes_hwpe_deinit();
 
   // return errors
