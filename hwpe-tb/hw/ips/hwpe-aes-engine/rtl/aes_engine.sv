@@ -63,16 +63,16 @@ module aes_engine
   always_ff @(posedge clk_i or negedge rst_ni)
   begin : data_input
     if(aes_input.valid)
-      if(ctrl_i.request_counter == 3)
+      if(ctrl_i.request_counter == 0)
         data_reg_i[31:0] <= aes_input.data;
 
-      else if(ctrl_i.request_counter == 2)
+      else if(ctrl_i.request_counter == 1)
         data_reg_i[63:32] <= aes_input.data;
 
-      else if(ctrl_i.request_counter == 1)
+      else if(ctrl_i.request_counter == 2)
         data_reg_i[95:64] <= aes_input.data;
 
-      else if(ctrl_i.request_counter == 0)
+      else if(ctrl_i.request_counter == 3)
         data_reg_i[127:96] <= aes_input.data;
 
     core_input <= data_reg_i; 
