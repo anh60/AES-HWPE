@@ -13,8 +13,8 @@ uint32_t *encrypt_mem_address = (uint32_t *)ENCRYPTION_MEMORY;
 uint32_t *decrypt_mem_address = (uint32_t *)DECRYPTION_MEMORY;
 
 /*// Could also do this!
-uint32_t encryption_memory[50];
-uint32_t decryption_memory[50];
+uint32_t encrypt_mem_address[50];
+uint32_t decrypt_mem_address[50];
 */
 
 #define KEY_BIT_LENGTH 256
@@ -45,6 +45,14 @@ int main()
 
   // wait for end of computation
   // Sleeps until the HWPE interrupts with a hwpe.done flag.
+  asm volatile("wfi" ::: "memory");
+
+  aes.input_address = encrypt_mem_address;
+  aes.output_address = decrypt_mem_address;
+  aes.data_length = 8 * 3;
+  aes.encryption_decryption_mode = DECRYPT;
+
+  (void)aes_hwpe_start(&aes);
   asm volatile("wfi" ::: "memory");
 
   aes_hwpe_deinit();
