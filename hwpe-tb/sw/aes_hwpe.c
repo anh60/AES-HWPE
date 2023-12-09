@@ -4,49 +4,36 @@
 #include "archi_hwpe.h"
 #include "hal_hwpe.h"
 
-void aes_hwpe_configure(uint8_t *input, uint8_t *output, uint32_t data_byte_length, uint32_t key_bit_length, uint32_t encrypt_decrypt)
-{
-    // job-dependent registers
-    hwpe_input_addr_set((uint32_t)input);
-    hwpe_output_addr_set((uint32_t)output);
-    hwpe_data_byte_length_set(data_byte_length);
-    hwpe_aes_enc_dec_set(encrypt_decrypt);
+#define ERROR_NOT_INITIALISED 1
+#define ERROR_INVALID_KEY 1
 
-    uint16_t key_mode = 0xFFFF;
-    switch (key_bit_length)
+uint8_t is_initialised = 0;
+uint8_t is_configured = 0;
+uint8_t is_key_set = 0;
+
+int aes_hwpe_start(aes_config_t *aes)
+{
+    if (!is_initialised)
     {
-    case 128:
-        key_mode = 0;
-        break;
-
-    case 256:
-        key_mode = 1;
-        break;
-
-    default:
-        // Unsupported key length!!
-        break;
+        return -ERROR_NOT_INITIALISED;
     }
-    hwpe_key_mode_set((uint32_t)key_mode);
 
-    return;
-}
+    // job-dependent registers
+    hwpe_input_addr_set(aes->input_address);
+    hwpe_output_addr_set(aes->output_address);
+    hwpe_data_byte_length_set(aes->data_length);
+    hwpe_aes_enc_dec_set(aes->encryption_decryption_mode);
+    hwpe_key_mode_set(aes->key_mode);
+    hwpe_key_set(aes->key);
 
-void aes_hwpe_key_set(uint8_t *key_value)
-{
-    hwpe_key_set((uint32_t *)key_value);
-}
-
-void aes_hwpe_start(void)
-{
-
+    // BLOCKING!!
     while (hwpe_acquire_job() < 0)
         ;
 
     // start hwpe operation
     hwpe_trigger_job();
 
-    return;
+    return 0;
 }
 
 void aes_hwpe_init(void)
@@ -54,12 +41,16 @@ void aes_hwpe_init(void)
     // enable hwpe
     hwpe_cg_enable();
 
+    is_initialised = 1;
     return;
 }
 
 void aes_hwpe_deinit(void)
 {
-    // enable hwpe
+    is_initialised = 0;
+    is_key_set = 0;
+    is_configured = 0;
+
     hwpe_cg_disable();
 
     return;

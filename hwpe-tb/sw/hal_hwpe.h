@@ -43,8 +43,6 @@
 #define HWPE_ADDR_BASE ARCHI_FC_HWPE_ADDR
 #define HWPE_ADDR_SPACE 0x00000100
 
-#define ENCRYPT 1
-#define DECRYPT 0
 // For all the following functions we use __builtin_pulp_OffsetedWrite and __builtin_pulp_OffsetedRead
 // instead of classic load/store because otherwise the compiler is not able to correctly factorize
 // the HWPE base in case several accesses are done, ending up with twice more code
