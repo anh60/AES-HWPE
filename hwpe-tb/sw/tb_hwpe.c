@@ -72,14 +72,21 @@ uint8_t plaintext[] = {
 uint8_t encryption_memory[50] = {0xFA};
 uint8_t decryption_memory[50] = {0xFB};
 
+#define ENCRYPTION_MEMORY 0x1C010100
+
+volatile uint8_t *ptr = (volatile int *)ENCRYPTION_MEMORY;
+
 int main()
 {
   volatile int errors = 0;
 
+  uint8_t *p_plaintext = plaintext;
+  uint8_t *p_encryption_memory = 0x00;
+  uint8_t *p_decryption_memory = decryption_memory;
   aes_hwpe_init();
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
-  aes_hwpe_configure(plaintext, encryption_memory, sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
+  aes_hwpe_configure(p_plaintext, ptr, sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
   aes_hwpe_key_set(key);
   // BLOCKING FUNCTION!
   aes_hwpe_start();
