@@ -14,7 +14,7 @@ sources:
       # levels 1 and 0, etc. Files within a level are ordered alphabetically.
       # Level 0
       - src/rtl/aes_sbox.v
-      - src/rtl/inv_sbox.v
+      - src/rtl/aes_inv_sbox.v
       - src/rtl/aes_key_mem.v
 
       # Level 1
@@ -23,4 +23,4 @@ sources:
       # Level 2
       - src/rtl/aes_core.v
       #level 3
-      - src/aes.v
+      #- src/aes.v
