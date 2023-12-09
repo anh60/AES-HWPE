@@ -133,8 +133,6 @@ end
   begin: data_clear
     if(ctrl_i.clear)
       data_reg_i <= '0;
-      data_reg_o <= '0;
-
   end
 
 assign aes_input.ready = aes_input.valid;
