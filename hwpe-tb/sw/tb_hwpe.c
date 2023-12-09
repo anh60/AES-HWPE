@@ -48,7 +48,7 @@ int main()
 
   aes.input_address = encrypt_mem_address;
   aes.output_address = decrypt_mem_address;
-  aes.data_length = 32;
+  aes.data_length = 16 * 3; // Every encryption block is 16 bytes
   aes.encryption_decryption_mode = DECRYPT;
 
   (void)aes_hwpe_start(&aes);
