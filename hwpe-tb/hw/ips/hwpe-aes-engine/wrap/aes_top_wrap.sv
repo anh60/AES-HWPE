@@ -10,8 +10,9 @@ import hwpe_ctrl_package::*;
 module aes_top_wrap
 #(
   parameter N_CORES = 2,
-  parameter MP  = 2,
-  parameter ID  = 10
+  parameter N_EVT   = 8,
+  parameter MP      = 2,
+  parameter ID      = 10
 )
 (
   // global signals
@@ -20,7 +21,7 @@ module aes_top_wrap
   input  logic                                  test_mode_i,
 
   // events
-  output logic [N_CORES-1:0][REGFILE_N_EVT-1:0] evt_o,
+  output logic [N_CORES-1:0][N_EVT-1:0] evt_o,
 
   // tcdm master ports
   output logic [MP-1:0]                         tcdm_req,
@@ -80,6 +81,8 @@ module aes_top_wrap
     periph_r_data  = periph.r_data;
     periph_r_valid = periph.r_valid;
     periph_r_id    = periph.r_id;
+    REGFILE_N_EVT = 8;
+
   end
 
   aes_top #(
