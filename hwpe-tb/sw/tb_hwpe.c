@@ -43,13 +43,12 @@ int main()
 
   (void)aes_hwpe_start(&aes);
 
-  // wait for end of computation
   // Sleeps until the HWPE interrupts with a hwpe.done flag.
   asm volatile("wfi" ::: "memory");
 
   aes.input_address = encrypt_mem_address;
   aes.output_address = decrypt_mem_address;
-  aes.data_length = 8 * 3;
+  aes.data_length = 32;
   aes.encryption_decryption_mode = DECRYPT;
 
   (void)aes_hwpe_start(&aes);
