@@ -21,7 +21,7 @@ package aes_package;
   parameter int unsigned HWPE_KEY_31_0 = 9;
   parameter int unsigned HWPE_KEY_MODE = 10;
   parameter int unsigned HWPE_DATA_BYTE_LENGTH = 11;
-  parameter int unsigned HWPE_ENCODE_DECODE_MODE= 12;
+  parameter int unsigned HWPE_ENCODE_DECODE_MODE = 12;
 
 
 
