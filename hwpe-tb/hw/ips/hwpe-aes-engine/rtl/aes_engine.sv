@@ -23,7 +23,8 @@ module aes_engine
   input  ctrl_engine_t           ctrl_i,
   output flags_engine_t          flags_o
 );
-  logic unsigned [127:0]  data_reg = '0;
+  logic unsigned [127:0]  data_reg_i = '0;
+  logic unsigned [127:0]  data_reg_o = '0;
 
 
   logic         core_encdec;
@@ -63,18 +64,18 @@ module aes_engine
   begin : data_input
     if(aes_input.valid)
       if(ctrl_i.request_counter == 0)
-        data_reg[31:0] <= aes_input.data;
+        data_reg_i[31:0] <= aes_input.data;
 
       else if(ctrl_i.request_counter == 1)
-        data_reg[63:32] <= aes_input.data;
+        data_reg_i[63:32] <= aes_input.data;
 
       else if(ctrl_i.request_counter == 2)
-        data_reg[95:64] <= aes_input.data;
+        data_reg_i[95:64] <= aes_input.data;
 
       else if(ctrl_i.request_counter == 3)
-        data_reg[127:96] <= aes_input.data;
+        data_reg_i[127:96] <= aes_input.data;
 
-    core_input <= data_reg; 
+    core_input <= data_reg_i; 
     
   end 
 
@@ -83,7 +84,7 @@ module aes_engine
     //Send engine done signal to ctrl
 
     if(core_output_valid)
-        data_reg <= core_output;
+        data_reg_o <= core_output;
 
   end
 
@@ -113,13 +114,13 @@ end
   always_comb
   begin:  data_output
     if(ctrl_i.request_counter == 0)
-      aes_output.data = data_reg[31:0];
+      aes_output.data = data_reg_o[31:0];
     else if(ctrl_i.request_counter == 1)
-      aes_output.data = data_reg[63:32];
+      aes_output.data = data_reg_o[63:32];
     else if(ctrl_i.request_counter == 2)
-      aes_output.data = data_reg[95:64];
+      aes_output.data = data_reg_o[95:64];
     else if(ctrl_i.request_counter == 3)
-      aes_output.data = data_reg[127:96];
+      aes_output.data = data_reg_o[127:96];
 
     aes_output.valid = ctrl_i.data_out_valid;
     aes_output.strb  = '1; // strb is always '1 --> all bytes are considered valid
@@ -131,7 +132,9 @@ end
   always_ff @(posedge clk_i or negedge rst_ni)
   begin: data_clear
     if(ctrl_i.clear)
-      data_reg <= '0;
+      data_reg_i <= '0;
+      data_reg_o <= '0;
+
   end
 
 assign aes_input.ready = aes_input.valid;
