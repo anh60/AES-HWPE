@@ -26,15 +26,15 @@ module aes_engine
   logic unsigned [127:0]  data_reg = '0;
 
 
-  logic         core_encdec = '0;
-  logic         core_init_key = '0;
-  logic         core_start ='0; 
-  logic         core_ready = '0;
-  logic[255:0]  core_key = '0; 
-  logic         core_key_mode = '0; 
-  logic[127:0]  core_input = '0; 
-  logic[127:0]  core_output = '0; 
-  logic         core_output_valid = '0;
+  logic         core_encdec;
+  logic         core_init_key;
+  logic         core_start; 
+  logic         core_ready;
+  logic[255:0]  core_key; 
+  logic         core_key_mode; 
+  logic[127:0]  core_input; 
+  logic[127:0]  core_output; 
+  logic         core_output_valid;
 
   aes_core i_aes_core(
 

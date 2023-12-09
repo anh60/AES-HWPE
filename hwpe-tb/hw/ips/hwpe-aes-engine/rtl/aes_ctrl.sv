@@ -58,7 +58,7 @@ module aes_ctrl
     .reg_file ( reg_file    )
   );
 
-  assign evt_o = slave_flags.evt[3:0];;
+  assign evt_o = slave_flags.evt;
 
   /* Main FSM */
   aes_fsm fsm(
