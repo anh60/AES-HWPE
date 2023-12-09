@@ -68,7 +68,6 @@ uint8_t plaintext[] = {
     0x22,
     0x23,
     0x24,
-    0x25,
 };
 uint8_t encryption_memory[50] = {0xFA};
 uint8_t decryption_memory[50] = {0xFB};
