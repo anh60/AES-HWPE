@@ -15,14 +15,23 @@
  */
 
 /*
- * Authors:  Francesco Conti <fconti@iis.ee.ethz.ch>
+ * Authors:  Andreas Hølleland, Marcus Tjomsaas
  */
 
 #include <stdint.h>
 
 #include "aes_hwpe.c"
-#include "archi_hwpe.h"
-#include "hal_hwpe.h"
+
+#define ENCRYPTION_MEMORY 0x1C010100
+#define DECRYPTION_MEMORY 0x1C010200
+
+volatile int *encrypt_mem_address = (volatile int *)ENCRYPTION_MEMORY;
+volatile int *decrypt_mem_address = (volatile int *)DECRYPTION_MEMORY;
+
+/*// Could also do this!
+uint8_t encryption_memory[50];
+uint8_t decryption_memory[50];
+*/
 
 #define KEY_BIT_LENGTH 256
 uint8_t key[KEY_BIT_LENGTH / 8] = {
@@ -69,27 +78,16 @@ uint8_t plaintext[] = {
     0x23,
     0x24,
 };
-uint8_t encryption_memory[50] = {0xFA};
-uint8_t decryption_memory[50] = {0xFB};
-
-#define ENCRYPTION_MEMORY 0x1C010100
-#define DECRYPTION_MEMORY 0x1C010200
-
-volatile int *encrypt_mem_address = (volatile int *)ENCRYPTION_MEMORY;
-volatile int *decrypt_mem_address = (volatile int *)DECRYPTION_MEMORY;
 
 int main()
 {
   volatile int errors = 0;
 
-  uint8_t *p_plaintext = plaintext;
-  uint8_t *p_encryption_memory = 0x00;
-  uint8_t *p_decryption_memory = decryption_memory;
   aes_hwpe_init();
+  aes_hwpe_key_set(key);
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
-  aes_hwpe_configure(p_plaintext, encrypt_mem_address, sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
-  aes_hwpe_key_set(key);
+  aes_hwpe_configure(plaintext, encrypt_mem_address, sizeof(plaintext), KEY_BIT_LENGTH, ENCRYPT);
   // BLOCKING FUNCTION!
   aes_hwpe_start();
 
@@ -98,9 +96,7 @@ int main()
   asm volatile("wfi" ::: "memory");
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
-  aes_hwpe_configure(encrypt_mem_address, decrypt_mem_address, sizeof(plaintext), KEY_BIT_LENGTH, DECRYPT);
-  aes_hwpe_key_set(key);
-  // BLOCKING FUNCTION!
+  aes_hwpe_configure(encrypt_mem_address, decrypt_mem_address, 8 * 3, KEY_BIT_LENGTH, DECRYPT);
   aes_hwpe_start();
 
   // wait for end of computation
