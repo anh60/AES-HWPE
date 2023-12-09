@@ -108,10 +108,14 @@ module aes_fsm (
       end
 
       AES_WORKING: begin
-        //Wait for AES encryption here...
-        next_state = AES_SEND_DATA;
+        next_state = AES_WORKING_CORE;
       end 
 
+      AES_WORKING_CORE: begin
+        //Wait for AES encryption here...
+        if(flags_engine_i.core_ready)
+          next_state = AES_SEND_DATA;
+      end 
 
       AES_SEND_DATA: begin
         if (streamer_flags_i.aes_output_sink_flags.ready_start)
@@ -215,10 +219,14 @@ module aes_fsm (
       end
 
       AES_WORKING: begin
-        //Do AES encryption....
+        //Start core
         ctrl_engine_o.core_start   = '1;
       end
 
+      AES_WORKING_CORE: begin
+        //Wait for core to finish
+      end 
+      
       AES_SEND_DATA: begin 
         streamer_ctrl_o.aes_output_sink_ctrl.req_start = 1'b1;
       end 

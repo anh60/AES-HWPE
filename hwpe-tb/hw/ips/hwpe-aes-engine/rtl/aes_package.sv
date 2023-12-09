@@ -68,6 +68,7 @@ package aes_package;
       AES_REQUEST_DATA,
       AES_REQUEST_DATA_WAIT,
       AES_WORKING,
+      AES_WAIT_CORE,
       AES_SEND_DATA,
       AES_SEND_DATA_WAIT,
       AES_MEMORY_WRITE_WAIT,
