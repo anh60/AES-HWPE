@@ -10,7 +10,7 @@ import hwpe_ctrl_package::*;
 module aes_top
 #(
   parameter int unsigned N_CORES = 2,
-  parameter int unsigned N_EVT   = 8,
+  parameter int unsigned N_EVT   = 2,
   parameter int unsigned MP      = 2,
   parameter int unsigned ID      = 10
 )
