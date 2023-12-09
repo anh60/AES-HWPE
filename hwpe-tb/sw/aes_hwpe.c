@@ -5,7 +5,6 @@
 #include "hal_hwpe.h"
 
 #define ERROR_NOT_INITIALISED 1
-#define ERROR_INVALID_KEY_
 
 uint8_t is_initialised = 0;
 uint8_t is_configured = 0;
@@ -40,17 +39,14 @@ void aes_hwpe_init(void)
 {
     // enable hwpe
     hwpe_cg_enable();
-
     is_initialised = 1;
+
     return;
 }
 
 void aes_hwpe_deinit(void)
 {
     is_initialised = 0;
-    is_key_set = 0;
-    is_configured = 0;
-
     hwpe_cg_disable();
 
     return;

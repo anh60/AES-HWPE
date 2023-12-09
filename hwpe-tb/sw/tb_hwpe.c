@@ -34,13 +34,13 @@ int main()
   aes_config_t aes = {
       .input_address = plaintext,
       .output_address = encrypt_mem_address,
-      .data_length = sizeof(plaintext),
+      .data_length = sizeof(plaintext), // Can encrypt all sizes
       .key_mode = KEY_MODE_256,
       .key = aes_key,
-      .encryption_decryption_mode = ENCRYPT};
+      .encryption_decryption_mode = ENCRYPT,
+  };
 
   aes_hwpe_init();
-
   (void)aes_hwpe_start(&aes);
 
   // Sleeps until the HWPE interrupts with a hwpe.done flag.
