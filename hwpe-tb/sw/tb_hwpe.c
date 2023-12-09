@@ -97,6 +97,7 @@ int main()
 
   // Configuring the AES HWPE with the input location, output location, data size and key length.
   aes_hwpe_configure(encrypt_mem_address, decrypt_mem_address, 8 * 3, KEY_BIT_LENGTH, DECRYPT);
+  aes_hwpe_key_set(key);
   aes_hwpe_start();
 
   // wait for end of computation
