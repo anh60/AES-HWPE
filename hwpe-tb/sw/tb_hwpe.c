@@ -9,8 +9,8 @@
 #define ENCRYPTION_MEMORY 0x1C010100
 #define DECRYPTION_MEMORY 0x1C010200
 
-uint32_t *encrypt_mem_address = (uint32_t *)ENCRYPTION_MEMORY;
-uint32_t *decrypt_mem_address = (uint32_t *)DECRYPTION_MEMORY;
+volatile uint32_t *encrypt_mem_address = (volatile uint32_t *)ENCRYPTION_MEMORY;
+volatile uint32_t *decrypt_mem_address = (volatile uint32_t *)DECRYPTION_MEMORY;
 
 /*// Could also do this!
 uint32_t encryption_memory[50];
