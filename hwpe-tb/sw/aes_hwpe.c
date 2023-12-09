@@ -5,7 +5,7 @@
 #include "hal_hwpe.h"
 
 #define ERROR_NOT_INITIALISED 1
-#define ERROR_INVALID_KEY 1
+#define ERROR_INVALID_KEY_
 
 uint8_t is_initialised = 0;
 uint8_t is_configured = 0;
