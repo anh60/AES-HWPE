@@ -45,7 +45,7 @@ module aes_fsm (
   begin : fsm_seq_request_counter
     if (~reset_n) 
       ctrl_engine_o.request_counter <= 0;
-    else if(current_state == AES_WORKING || current_state == AES_STARTING)
+    else if(current_state == AES_START_CORE || current_state == AES_START_KEY)
       ctrl_engine_o.request_counter <= 0;
     else if(request_count_enable) 
       ctrl_engine_o.request_counter <= ctrl_engine_o.request_counter + 1;       
