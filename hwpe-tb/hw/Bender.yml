@@ -6,23 +6,20 @@ package:
   name: hwpe-tb
 
 dependencies:
-  hwpe-ctrl:          { path: "ips/hwpe-ctrl"                                                         }
-  zeroriscy:          { git: "https://github.com/FrancescoConti/ibex.git", rev: "bender"              }
-  aes:                { path: "ips/aes"                                                                }
-  hwpe-aes-engine:    { path: "ips/hwpe-aes-engine"                                                   }
-  hwpe-stream:        { path: "ips/hwpe-stream"                                                       }
-  scm:                { git: "https://github.com/pulp-platform/scm.git", rev: "master"                }
-  tech_cells_generic: { git: "https://github.com/pulp-platform/tech_cells_generic.git", rev: "master" }
+  hwpe-ctrl:          { path: "ips/hwpe-ctrl"              }
+  zeroriscy:          { path: "ips/zeroriscy"              }
+  aes:                { path: "ips/aes"                    }
+  hwpe-aes-engine:    { path: "ips/hwpe-aes-engine"        }
+  hwpe-stream:        { path: "ips/hwpe-stream"            }
+  scm:                { path: "ips/scm"                    }
+  tech_cells_generic: { path: "ips/tech_cells_generic.git" }
 
 workspace:
   checkout_dir: "./ips"
 
 sources:
-
   - target: vsim
     files:
-      # Level 0
       - rtl/tb_dummy_memory.sv
-      # Level 1
       - rtl/tb_hwpe.sv
 
