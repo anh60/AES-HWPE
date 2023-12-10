@@ -30,8 +30,14 @@ The AES Hardware Processing Engine (HWPE) is designed for developers using the R
 
 
 ## Prerequisites
-Before you begin, ensure you have met the following requirements:
-* [List any prerequisites, like software versions, libraries, etc.]
+This testbench requires a RISC-V GCC toolchain available and installed, for
+example https://github.com/pulp-platform/pulp-riscv-gnu-toolchain.
+
+The toolchain path must be added to the system path:
+```
+export PULP_RISCV_GCC_TOOLCHAIN=/path/to/riscv/gcc/root
+```
+The testbench will look for the toolchain in `$PULP_RISCV_GCC_TOOLCHAIN/bin`.
 
 ## Installation and Setup
 Follow these steps to get your development environment running:
@@ -48,6 +54,9 @@ Follow these steps to get your development environment running:
    ```bash
    make update-ips
    ```
+   This will solve dependencies and generate the
+   simulation scripts using Bender, which will be installed if not already
+   available. 
 
 5. **Build the RTL files**
    ```bash
@@ -63,6 +72,7 @@ Follow these steps to get your development environment running:
    ```
    Launches the ModelSim GUI for simulation.
 
+# HWPE interface specifications
+[![Documentation Status](https://readthedocs.org/projects/hwpe-doc/badge/?version=latest)](https://hwpe-doc.readthedocs.io/en/latest/?badge=latest)
 
-## Usage
-[Provide instructions on how to use your project after installation is complete.]
+See documentation on https://hwpe-doc.readthedocs.io.
