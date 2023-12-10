@@ -9,22 +9,32 @@ timeprecision 1ps;
 
 module tb_hwpe;
 
-  // parameters
-  parameter PROB_STALL = 0.1;
-  parameter N_CORES = 8;
-  parameter MP = 2;
-  parameter ID = 10;
-  parameter MEMORY_SIZE = 256*1024;
-  parameter BASE_ADDR = 0;
-  parameter HWPE_ADDR_BASE_BIT = 20;
-  parameter STIM_INSTR = "../../stim_instr.txt";
-  parameter STIM_DATA  = "../../stim_data.txt";
+  // AES_TOP_WRAP parameters
+  parameter N_CORES             = 8;
+  parameter N_CONTEXT           = 2,
+  parameter N_IO_REGS           = 16,
+  parameter N_GENERIC_REGS      = 8,
+  parameter MP                  = 2;
+  parameter ID                  = 10;
 
-  // global signals
+  // Memory parameters
+  parameter MEMORY_SIZE         = 256*1024;
+  parameter BASE_ADDR           = 0;
+  parameter HWPE_ADDR_BASE_BIT  = 20;
+
+  // Instruction and data memory files
+  parameter STIM_INSTR          = "../../stim_instr.txt";
+  parameter STIM_DATA           = "../../stim_data.txt";
+
+  // Stall probability
+  parameter PROB_STALL          = 0.1;
+
+  // Global signals
   logic                         clk_i  = '0;
   logic                         rst_ni = '1;
   logic                         test_mode_i = '0;
-  // local enable
+
+  // Local enable
   logic                         enable_i = '1;
   logic                         clear_i  = '0;
 
@@ -39,6 +49,7 @@ module tb_hwpe;
   logic enable_feat   = 1'b1;
   logic enable_weight = 1'b1;
   logic enable_mem    = 1'b1;
+
   int in_len;
   int out_len;
   int threshold_shift;
@@ -166,11 +177,11 @@ module tb_hwpe;
   endgenerate
 
   aes_top_wrap #(
-    .N_CORES          ( N_CORES ),
-    .N_CONTEXT        ( 2  ),
-    .N_IO_REGS        ( 16 ),
-    .N_GENERIC_REGS   ( 8  ),
-    .MP               ( MP ),
+    .N_CORES          ( N_CORES         ),
+    .N_CONTEXT        ( N_CONTEXT       ),
+    .N_IO_REGS        ( N_IO_REGS       ),
+    .N_GENERIC_REGS   ( N_GENERIC_REGS  ),
+    .MP               ( MP              ),
     .ID               ( ID )
   ) i_hwpe_top_wrap (
     .clk_i          ( clk_i          ),
