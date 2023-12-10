@@ -1,7 +1,33 @@
 # AES HWPE Accelerator
 
 ## Introduction
-[Provide a brief introduction about your project. Explain what it does and who it's for.]
+
+The Advanced Encryption Standard (AES) Hardware Processing Engine (HWPE) is a cryptographic accelerator developed to enhance data encryption and decryption capabilities on the PULPissimo platform. The project includes the Register Transfer Level (RTL) design, a Hardware Abstraction Layer (HAL), an AES C driver, and an application that configures and runs the HWPE using the AES driver:
+
+- **RTL Design**: The foundation of the AES HWPE, providing the low-level hardware design essential for its functionality.
+  
+- **HAL Design**: This layer abstracts the hardware specifics, offering a more accessible interface for higher-level software interactions.
+  
+- **AES C Driver**: A driver written in C that facilitates communication between the HWPE and application software, simplifying the process of configuring and controlling the HWPE.
+
+- **Example Application**: Demonstrates the practical usage of the AES HWPE. This application showcases how to configure and operate the HWPE using the provided AES driver, serving as a guide for developers to integrate and utilize the HWPE in their own projects.
+
+
+### Key Specifications:
+The AES accelerator supports different modes and specifications: 
+
+- **Key Modes**: The HWPE supports both 128-bit and 256-bit key modes. 
+
+- **Encryption and Decryption**: Designed to perform Electronic Codebook (ECB) encryption and decryption.
+
+- **Data Management**: The AES gets data from one memory address, encrypts/decrypts it, and then stores it in another memory address. Can encrypt or decrypt up to 4GB if the hardware supports it. 
+
+- **Configuration Flexibility**: The engine provides several configurable options, including the selection of key mode, setting a key, setting a data length, configuring input and output addresses, and toggling between encryption and decryption modes.
+
+### Intended Use
+
+The AES Hardware Processing Engine (HWPE) is designed for developers using the RISC-V PULPissimo architecture who need to offload AES-based cryptographic processing from the main CPU.
+
 
 ## Prerequisites
 Before you begin, ensure you have met the following requirements:
@@ -19,45 +45,24 @@ Follow these steps to get your development environment running:
    cd hwpe-tb
    ```
 3. **Update the repository**
-   Update the repository to make sure it's up-to-date with the latest changes.
    ```bash
    make update-ips
    ```
-4. **Build the RTL files**
-   Compile all the RTL (Register Transfer Level) files and other necessary components.
+
+5. **Build the RTL files**
    ```bash
    make build-hw
    ```
-5. **Clean and compile the workspace**
-   Clean your workspace and prepare it for the next steps.
+6. **Clean and compile the workspace**
    ```bash
    make clean all 
    ```
 7. **Run the simulation**
-   Launch the ModelSim GUI for simulation.
    ```bash
    make run gui=1
    ```
+   Launches the ModelSim GUI for simulation.
+
 
 ## Usage
 [Provide instructions on how to use your project after installation is complete.]
-
-## Contributing to [Project Name]
-To contribute to [Project Name], follow these steps:
-1. Fork this repository.
-2. Create a branch: `git checkout -b <branch_name>`.
-3. Make your changes and commit them: `git commit -m '<commit_message>'`
-4. Push to the original branch: `git push origin [Project Name]/<location>`
-5. Create the pull request.
-
-Alternatively, see the GitHub documentation on [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
-
-## Contributors
-Thanks to the following people who have contributed to this project:
-* [List contributors here]
-
-## Contact
-If you want to contact me you can reach me at [Your Email].
-
-## License
-This project uses the following license: [License Name].
