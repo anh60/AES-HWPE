@@ -11,7 +11,7 @@ module tb_hwpe;
 
   // parameters
   parameter PROB_STALL = 0.1;
-  parameter NC = 8;
+  parameter N_CORES = 8;
   parameter MP = 2;
   parameter ID = 10;
   parameter MEMORY_SIZE = 256*1024;
@@ -166,7 +166,7 @@ module tb_hwpe;
   endgenerate
 
   aes_top_wrap #(
-    .N_CORES          ( NC ),
+    .N_CORES          ( N_CORES ),
     .N_CONTEXT        ( 2  ),
     .N_IO_REGS        ( 16 ),
     .N_GENERIC_REGS   ( 8  ),
