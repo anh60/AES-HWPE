@@ -1,14 +1,11 @@
 #include <stdint.h>
 
 #include "aes_hwpe.h"
-#include "archi_hwpe.h"
-#include "hal_hwpe.h"
+#include "hal_aes_hwpe.h"
 
 #define ERROR_NOT_INITIALISED 1
 
 uint8_t is_initialised = 0;
-uint8_t is_configured = 0;
-uint8_t is_key_set = 0;
 
 int aes_hwpe_start(aes_config_t *aes)
 {
@@ -37,7 +34,6 @@ int aes_hwpe_start(aes_config_t *aes)
 
 void aes_hwpe_init(void)
 {
-    // enable hwpe
     hwpe_cg_enable();
     is_initialised = 1;
 
