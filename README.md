@@ -12,7 +12,7 @@ Follow these steps to get your development environment running:
 
 1. **Clone the repository**
    ```bash
-   git clone [URL of your repository]
+   git clone https://github.com/anh60/AES-HWPE
    ```
 2. **Navigate to the project directory**
    ```bash
@@ -28,15 +28,10 @@ Follow these steps to get your development environment running:
    ```bash
    make build-hw
    ```
-5. **Clean the workspace**
+5. **Clean and compile the workspace**
    Clean your workspace and prepare it for the next steps.
    ```bash
-   [Insert the appropriate make command for cleaning]
-   ```
-6. **Compile the C code**
-   Compile the C code required for the simulation.
-   ```bash
-   [Insert the appropriate make command for compiling C code]
+   make clean all 
    ```
 7. **Run the simulation**
    Launch the ModelSim GUI for simulation.
