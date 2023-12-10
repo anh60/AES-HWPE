@@ -169,7 +169,7 @@ module tb_hwpe;
     .N_CORES          ( NC ),
     .N_CONTEXT        ( 2  ),
     .N_IO_REGS        ( 16 ),
-    .N_GENERIC_REGS   ( 0  ),
+    .N_GENERIC_REGS   ( 8  ),
     .MP               ( MP ),
     .ID               ( ID )
   ) i_hwpe_top_wrap (
