@@ -75,7 +75,7 @@ module aes_top
     .periph           ( periph            )
   );
 
-| // AES streamer module
+  // AES streamer module
   aes_streamer #(
     .MP               ( MP                ),
     .FD               ( 2                 )
