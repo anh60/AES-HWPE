@@ -49,11 +49,11 @@ $(STIM_INSTR) $(STIM_DATA): $(BIN)
 	ln -sfn $(mkfile_path)/hw/work $(VSIM_LIBS)
 	ln -sfn $(mkfile_path)/hw/veri/verilated $(VERI_LIBS)
 
-$(BIN): $(CRT) $(OBJ) sw/link.ld
-	$(LD) $(LD_OPTS) -o $(BIN) $(CRT) $(OBJ) -Tsw/link.ld
+$(BIN): $(CRT) $(OBJ) sw/boot/link.ld
+	$(LD) $(LD_OPTS) -o $(BIN) $(CRT) $(OBJ) -Tsw/boot/link.ld
 
-$(CRT): $(BUILD_DIR) sw/crt0.S
-	$(CC) $(CC_OPTS) -c sw/crt0.S -o $(CRT)
+$(CRT): $(BUILD_DIR) sw/boot/crt0.S
+	$(CC) $(CC_OPTS) -c sw/boot/crt0.S -o $(CRT)
 
 $(OBJ): $(TEST_SRCS) $(BUILD_DIR)/$(TEST_SRCS)
 	$(CC) $(CC_OPTS) -c $(TEST_SRCS) -Isw -o $(OBJ)
