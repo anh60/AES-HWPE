@@ -43,8 +43,8 @@ VERI_LIBS=$(BUILD_DIR)/$(TEST_SRCS)/verilated
 # Build implicit rules
 $(STIM_INSTR) $(STIM_DATA): $(BIN)
 	objcopy --srec-len 1 --output-target=srec $(BIN) $(BIN).s19
-	sw/parse_s19.pl $(BIN).s19 > $(BIN).txt
-	python sw/s19tomem.py $(BIN).txt $(STIM_INSTR) $(STIM_DATA)
+	sw/scripts/parse_s19.pl $(BIN).s19 > $(BIN).txt
+	python sw/scripts/s19tomem.py $(BIN).txt $(STIM_INSTR) $(STIM_DATA)
 	ln -sfn $(mkfile_path)/hw/modelsim.ini $(VSIM_INI)
 	ln -sfn $(mkfile_path)/hw/work $(VSIM_LIBS)
 	ln -sfn $(mkfile_path)/hw/veri/verilated $(VERI_LIBS)
