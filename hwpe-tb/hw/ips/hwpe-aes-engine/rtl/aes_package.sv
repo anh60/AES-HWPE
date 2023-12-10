@@ -60,7 +60,7 @@ package aes_package;
     logic core_done; 
   } flags_engine_t;
 
-  // AES FSM states with explicit binary values. Helpfull when debugging.
+  // AES FSM states with explicit binary values. Helpful when debugging.
   typedef enum { 
       AES_IDLE, 
       AES_START_KEY,

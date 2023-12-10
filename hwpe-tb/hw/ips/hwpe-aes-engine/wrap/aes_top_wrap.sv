@@ -9,20 +9,23 @@ import hwpe_ctrl_package::*;
 
 module aes_top_wrap
 #(
-  parameter N_CORES = 2,
-  parameter MP      = 2,
-  parameter ID      = 10
+  parameter int unsigned N_CORES          = 1,
+  parameter int unsigned N_CONTEXT        = 2,
+  parameter int unsigned N_IO_REGS        = 16,
+  parameter int unsigned N_GENERIC_REGS   = 8,
+  parameter int unsigned MP               = 2,
+  parameter int unsigned ID               = 10
 )
 (
-  // global signals
+  // Global signals
   input  logic                                  clk_i,
   input  logic                                  rst_ni,
   input  logic                                  test_mode_i,
 
-  // events
+  // Output to event unit (interrupt)
   output logic [N_CORES-1:0][REGFILE_N_EVT-1:0] evt_o,
 
-  // tcdm master ports
+  // TCDM ports
   output logic [MP-1:0]                         tcdm_req,
   input  logic [MP-1:0]                         tcdm_gnt,
   output logic [MP-1:0][31:0]                   tcdm_add,
@@ -32,30 +35,32 @@ module aes_top_wrap
   input  logic [MP-1:0][31:0]                   tcdm_r_data,
   input  logic [MP-1:0]                         tcdm_r_valid,
 
-  // periph slave port
+  // APB ports
   input  logic                                  periph_req,
   output logic                                  periph_gnt,
-  input  logic         [31:0]                   periph_add,
+  input  logic [31:0]                           periph_add,
   input  logic                                  periph_wen,
-  input  logic         [3:0]                    periph_be,
-  input  logic         [31:0]                   periph_data,
-  input  logic       [ID-1:0]                   periph_id,
-  output logic         [31:0]                   periph_r_data,
+  input  logic [3:0]                            periph_be,
+  input  logic [31:0]                           periph_data,
+  input  logic [ID-1:0]                         periph_id,
+  output logic [31:0]                           periph_r_data,
   output logic                                  periph_r_valid,
-  output logic       [ID-1:0]                   periph_r_id
+  output logic [ID-1:0]                         periph_r_id
 );
 
+  // TCDM stream interface
   hwpe_stream_intf_tcdm tcdm[MP-1:0] (
     .clk ( clk_i )
   );
 
+  // APB stream interface
   hwpe_ctrl_intf_periph #(
     .ID_WIDTH ( ID )
   ) periph (
     .clk ( clk_i )
   );
 
-  // bindings
+  // TCDM bindings
   generate
     for(genvar ii=0; ii<MP; ii++) begin: tcdm_binding
       assign tcdm_req  [ii] = tcdm[ii].req;
@@ -68,6 +73,8 @@ module aes_top_wrap
       assign tcdm[ii].r_valid = tcdm_r_valid [ii];
     end
   endgenerate
+
+  // APB bindings
   always_comb
   begin
     periph.req  = periph_req;
@@ -82,17 +89,21 @@ module aes_top_wrap
     periph_r_id    = periph.r_id;
   end
 
+  // AES HWPE
   aes_top #(
-    .N_CORES ( N_CORES ),
-    .MP      ( MP      ),
-    .ID      ( ID      )
-  ) i_mac_top (
-    .clk_i       ( clk_i       ),
-    .rst_ni      ( rst_ni      ),
-    .test_mode_i ( test_mode_i ),
-    .evt_o       ( evt_o       ),
-    .tcdm        ( tcdm        ),
-    .periph      ( periph      )
+    .N_CORES          ( N_CORES         ),
+    .N_CONTEXT        ( N_CONTEXT       ),
+    .N_IO_REGS        ( N_IO_REGS       ),
+    .N_GENERIC_REGS   ( N_GENERIC_REGS  ),
+    .MP               ( MP              ),
+    .ID               ( ID              )
+  ) i_aes_top (
+    .clk_i            ( clk_i           ),
+    .rst_ni           ( rst_ni          ),
+    .test_mode_i      ( test_mode_i     ),
+    .evt_o            ( evt_o           ),
+    .tcdm             ( tcdm            ),
+    .periph           ( periph          )
   );
 
 endmodule

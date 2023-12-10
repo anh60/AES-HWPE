@@ -9,22 +9,32 @@ timeprecision 1ps;
 
 module tb_hwpe;
 
-  // parameters
-  parameter PROB_STALL = 0.1;
-  parameter NC = 8;
-  parameter MP = 2;
-  parameter ID = 10;
-  parameter MEMORY_SIZE = 256*1024;
-  parameter BASE_ADDR = 0;
-  parameter HWPE_ADDR_BASE_BIT = 20;
-  parameter STIM_INSTR = "../../stim_instr.txt";
-  parameter STIM_DATA  = "../../stim_data.txt";
+  // AES HWPE parameters
+  parameter N_CORES             = 1;
+  parameter N_CONTEXT           = 2;
+  parameter N_IO_REGS           = 16;
+  parameter N_GENERIC_REGS      = 8;
+  parameter MP                  = 2;
+  parameter ID                  = 10;
 
-  // global signals
+  // Memory parameters
+  parameter MEMORY_SIZE         = 256*1024;
+  parameter BASE_ADDR           = 0;
+  parameter HWPE_ADDR_BASE_BIT  = 20;
+
+  // Instruction and data memory files
+  parameter STIM_INSTR          = "../../stim_instr.txt";
+  parameter STIM_DATA           = "../../stim_data.txt";
+
+  // Stall probability
+  parameter PROB_STALL          = 0.1;
+
+  // Global signals
   logic                         clk_i  = '0;
   logic                         rst_ni = '1;
   logic                         test_mode_i = '0;
-  // local enable
+
+  // Local enable
   logic                         enable_i = '1;
   logic                         clear_i  = '0;
 
@@ -39,6 +49,7 @@ module tb_hwpe;
   logic enable_feat   = 1'b1;
   logic enable_weight = 1'b1;
   logic enable_mem    = 1'b1;
+
   int in_len;
   int out_len;
   int threshold_shift;
@@ -47,7 +58,7 @@ module tb_hwpe;
   hwpe_stream_intf_tcdm stack[0:0]  (.clk(clk_i));
   hwpe_stream_intf_tcdm tcdm [MP:0] (.clk(clk_i));
 
-  logic [NC-1:0][1:0] evt;
+  logic [N_CORES-1:0][1:0] evt;
 
   logic [MP-1:0]       tcdm_req;
   logic [MP-1:0]       tcdm_gnt;
@@ -165,9 +176,13 @@ module tb_hwpe;
     assign data_rvalid = periph_r_valid | stack[0].r_valid | tcdm[2].r_valid;
   endgenerate
 
+  // AES Top Wrap
   aes_top_wrap #(
-    .N_CORES          ( NC ),
-    .MP               ( MP ),
+    .N_CORES          ( N_CORES         ),
+    .N_CONTEXT        ( N_CONTEXT       ),
+    .N_IO_REGS        ( N_IO_REGS       ),
+    .N_GENERIC_REGS   ( N_GENERIC_REGS  ),
+    .MP               ( MP              ),
     .ID               ( ID )
   ) i_hwpe_top_wrap (
     .clk_i          ( clk_i          ),
@@ -194,6 +209,7 @@ module tb_hwpe;
     .evt_o          ( evt            )
   );
 
+  // Memory 1
   tb_dummy_memory #(
     .MP          ( MP+1        ),
     .MEMORY_SIZE ( MEMORY_SIZE ),
@@ -210,6 +226,7 @@ module tb_hwpe;
     .tcdm        ( tcdm          )
   );
 
+  // Memory 2
   tb_dummy_memory #(
     .MP          ( 1           ),
     .MEMORY_SIZE ( MEMORY_SIZE ),
@@ -226,6 +243,7 @@ module tb_hwpe;
     .tcdm        ( instr )
   );
 
+  // Memory 3
   tb_dummy_memory #(
     .MP          ( 1           ),
     .MEMORY_SIZE ( MEMORY_SIZE ),
@@ -242,6 +260,7 @@ module tb_hwpe;
     .tcdm        ( stack )
   );
 
+  // Processor Core
   zeroriscy_core #(
     .N_EXT_PERF_COUNTERS ( 0 ),
     .RV32E               ( 0 ),
