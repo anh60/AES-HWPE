@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-#include "aes_hwpe.c"
+#include "aes_driver/aes_hwpe.c"
 
 #define ENCRYPTION_MEMORY 0x1C010100
 #define DECRYPTION_MEMORY 0x1C010200
@@ -43,37 +43,37 @@ uint32_t plaintext[] = {
 
 int main()
 {
-  volatile int errors = 0;
+    volatile int errors = 0;
 
-  // AES setup for encryption of "plaintext" and store it in  "encrypt_mem_address".
-  aes_config_t aes = {
-      .input_address = plaintext,
-      .output_address = encrypt_mem_address,
-      .data_length = sizeof(plaintext), // Can encrypt any byte size
-      .key_mode = KEY_MODE_256,
-      .key = aes_key,
-      .encryption_decryption_mode = ENCRYPT,
-  };
+    // AES setup for encryption of "plaintext" and store it in  "encrypt_mem_address".
+    aes_config_t aes = {
+        .input_address = plaintext,
+        .output_address = encrypt_mem_address,
+        .data_length = sizeof(plaintext), // Can encrypt any byte size
+        .key_mode = KEY_MODE_256,
+        .key = aes_key,
+        .encryption_decryption_mode = ENCRYPT,
+    };
 
-  aes_hwpe_init();
-  (void)aes_hwpe_start(&aes);
+    aes_hwpe_init();
+    (void)aes_hwpe_start(&aes);
 
-  // Sleeps until the HWPE interrupts with a hwpe.done flag.
-  asm volatile("wfi" ::: "memory");
+    // Sleeps until the HWPE interrupts with a hwpe.done flag.
+    asm volatile("wfi" ::: "memory");
 
-  // AES setup for decryption of "ecrypt_mem_address" and store it in  "decrypt_mem_address".
-  aes.input_address = encrypt_mem_address;
-  aes.output_address = decrypt_mem_address;
-  aes.data_length = 16 * 3; // Can only decrypt in increments of 16 bytes (128 bit).
-  aes.encryption_decryption_mode = DECRYPT;
+    // AES setup for decryption of "ecrypt_mem_address" and store it in  "decrypt_mem_address".
+    aes.input_address = encrypt_mem_address;
+    aes.output_address = decrypt_mem_address;
+    aes.data_length = 16 * 3; // Can only decrypt in increments of 16 bytes (128 bit).
+    aes.encryption_decryption_mode = DECRYPT;
 
-  (void)aes_hwpe_start(&aes);
-  asm volatile("wfi" ::: "memory");
+    (void)aes_hwpe_start(&aes);
+    asm volatile("wfi" ::: "memory");
 
-  aes_hwpe_deinit();
+    aes_hwpe_deinit();
 
-  // return errors
-  *(int *)0x80000000 = errors;
+    // return errors
+    *(int *)0x80000000 = errors;
 
-  return errors;
+    return errors;
 }
