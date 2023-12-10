@@ -9,7 +9,7 @@ timeprecision 1ps;
 
 module tb_hwpe;
 
-  // AES_TOP_WRAP parameters
+  // AES HWPE parameters
   parameter N_CORES             = 1;
   parameter N_CONTEXT           = 2;
   parameter N_IO_REGS           = 16;
@@ -176,6 +176,7 @@ module tb_hwpe;
     assign data_rvalid = periph_r_valid | stack[0].r_valid | tcdm[2].r_valid;
   endgenerate
 
+  // AES Top Wrap
   aes_top_wrap #(
     .N_CORES          ( N_CORES         ),
     .N_CONTEXT        ( N_CONTEXT       ),
@@ -208,6 +209,7 @@ module tb_hwpe;
     .evt_o          ( evt            )
   );
 
+  // Memory 1
   tb_dummy_memory #(
     .MP          ( MP+1        ),
     .MEMORY_SIZE ( MEMORY_SIZE ),
@@ -224,6 +226,7 @@ module tb_hwpe;
     .tcdm        ( tcdm          )
   );
 
+  // Memory 2
   tb_dummy_memory #(
     .MP          ( 1           ),
     .MEMORY_SIZE ( MEMORY_SIZE ),
@@ -240,6 +243,7 @@ module tb_hwpe;
     .tcdm        ( instr )
   );
 
+  // Memory 3
   tb_dummy_memory #(
     .MP          ( 1           ),
     .MEMORY_SIZE ( MEMORY_SIZE ),
@@ -256,6 +260,7 @@ module tb_hwpe;
     .tcdm        ( stack )
   );
 
+  // Processor Core
   zeroriscy_core #(
     .N_EXT_PERF_COUNTERS ( 0 ),
     .RV32E               ( 0 ),
