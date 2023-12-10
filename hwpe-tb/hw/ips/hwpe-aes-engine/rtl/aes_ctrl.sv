@@ -9,7 +9,7 @@ import hwpe_ctrl_package::*;
 
 module aes_ctrl
 #(
-  parameter int unsigned N_CORES         = 2,
+  parameter int unsigned N_CORES         = 1,
   parameter int unsigned N_CONTEXT       = 2,
   parameter int unsigned N_IO_REGS       = 16,
   parameter int unsigned ID              = 10,

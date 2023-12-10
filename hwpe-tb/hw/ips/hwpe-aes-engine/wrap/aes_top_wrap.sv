@@ -9,7 +9,7 @@ import hwpe_ctrl_package::*;
 
 module aes_top_wrap
 #(
-  parameter N_CORES = 2,
+  parameter N_CORES = 1,
   parameter MP      = 2,
   parameter ID      = 10
 )
