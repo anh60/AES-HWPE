@@ -26,9 +26,3 @@ sources:
       # Level 1
       - rtl/tb_hwpe.sv
 
-  - target: verilator
-    files:
-      # Level 0
-      - rtl/tb_dummy_memory.sv
-      # Level 1
-      - rtl/sim_hwpe.sv

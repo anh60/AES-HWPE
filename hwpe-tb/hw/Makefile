@@ -18,7 +18,6 @@
 
 ROOT           := $(shell pwd)
 compile_script ?= compile.tcl
-verilator_script ?= veri/files
 
 compile_flag = -suppress 2583 -suppress 13314
 
@@ -40,9 +39,6 @@ scripts: update
 	--vlog-arg="$(compile_flag)"     \
 	--vcom-arg="-pedanticerrors"     \
 	-t rtl -t test > ${compile_script}
-
-veri-scripts: update
-	./bender script verilator -t rtl -t verilator > $(verilator_script)
 
 opt:
 	vopt +acc=npr -o vopt_tb -floatparameters+tb_hwpe tb_hwpe -work work
