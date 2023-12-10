@@ -10,7 +10,7 @@ timeprecision 1ps;
 module tb_hwpe;
 
   // AES_TOP_WRAP parameters
-  parameter N_CORES             = 8;
+  parameter N_CORES             = 1;
   parameter N_CONTEXT           = 2;
   parameter N_IO_REGS           = 16;
   parameter N_GENERIC_REGS      = 8;
