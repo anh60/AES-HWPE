@@ -47,7 +47,7 @@ module tb_hwpe;
   hwpe_stream_intf_tcdm stack[0:0]  (.clk(clk_i));
   hwpe_stream_intf_tcdm tcdm [MP:0] (.clk(clk_i));
 
-  logic [NC-1:0][1:0] evt;
+  logic [N_CORES-1:0][1:0] evt;
 
   logic [MP-1:0]       tcdm_req;
   logic [MP-1:0]       tcdm_gnt;
