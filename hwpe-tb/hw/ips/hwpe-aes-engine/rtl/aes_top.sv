@@ -9,23 +9,26 @@ import hwpe_ctrl_package::*;
 
 module aes_top
 #(
-  parameter int unsigned N_CORES = 1,
-  parameter int unsigned MP      = 2,
-  parameter int unsigned ID      = 10
+  parameter int unsigned N_CORES          = 1,
+  parameter int unsigned N_CONTEXT        = 2,
+  parameter int unsigned N_IO_REGS        = 16,
+  parameter int unsigned N_GENERIC_REGS   = 0,
+  parameter int unsigned MP               = 2,
+  parameter int unsigned ID               = 10
 )
 (
-  // global signals
+  // Global signals
   input  logic                                  clk_i,
   input  logic                                  rst_ni,
   input  logic                                  test_mode_i,
 
-  // events
+  // Events
   output logic [N_CORES-1:0][REGFILE_N_EVT-1:0] evt_o,
 
-  // tcdm master ports
+  // TCDM master ports
   hwpe_stream_intf_tcdm.master                  tcdm[MP-1:0],
 
-  // periph slave port
+  // Periph slave port
   hwpe_ctrl_intf_periph.slave                   periph
 );
 
@@ -74,10 +77,11 @@ module aes_top
   );
 
   aes_ctrl #(
-    .N_CORES   ( N_CORES  ),
-    .N_CONTEXT ( 2  ),
-    .N_IO_REGS ( 16 ),
-    .ID ( ID )
+    .N_CORES        ( N_CORES         ),
+    .N_CONTEXT      ( N_CONTEXT       ),
+    .N_IO_REGS      ( N_IO_REGS       ),
+    .N_GENERIC_REGS ( N_GENERIC_REGS  ),
+    .ID             ( ID              )
   ) i_ctrl (
     .clk_i            ( clk_i          ),
     .rst_ni           ( rst_ni         ),

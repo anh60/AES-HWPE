@@ -12,8 +12,8 @@ module aes_ctrl
   parameter int unsigned N_CORES         = 1,
   parameter int unsigned N_CONTEXT       = 2,
   parameter int unsigned N_IO_REGS       = 16,
-  parameter int unsigned ID              = 10,
-  parameter int unsigned ULOOP_HARDWIRED = 0
+  parameter int unsigned N_GENERIC_REGS  = 0,
+  parameter int unsigned ID              = 10
 )
 (
   // global signals
@@ -46,7 +46,7 @@ module aes_ctrl
     .N_CORES        ( N_CORES               ),
     .N_CONTEXT      ( N_CONTEXT             ),
     .N_IO_REGS      ( N_IO_REGS             ),
-    .N_GENERIC_REGS ( (1-ULOOP_HARDWIRED)*8 ),
+    .N_GENERIC_REGS ( N_GENERIC_REGS        ),
     .ID_WIDTH       ( ID                    )
   ) i_slave (
     .clk_i    ( clk_i       ),

@@ -167,6 +167,9 @@ module tb_hwpe;
 
   aes_top_wrap #(
     .N_CORES          ( NC ),
+    .N_CONTEXT        ( 2  ),
+    .N_IO_REGS        ( 16 ),
+    .N_GENERIC_REGS   ( 0  ),
     .MP               ( MP ),
     .ID               ( ID )
   ) i_hwpe_top_wrap (

@@ -9,9 +9,12 @@ import hwpe_ctrl_package::*;
 
 module aes_top_wrap
 #(
-  parameter N_CORES = 1,
-  parameter MP      = 2,
-  parameter ID      = 10
+  parameter int unsigned N_CORES          = 1,
+  parameter int unsigned N_CONTEXT        = 2,
+  parameter int unsigned N_IO_REGS        = 16,
+  parameter int unsigned N_GENERIC_REGS   = 0,
+  parameter int unsigned MP               = 2,
+  parameter int unsigned ID               = 10
 )
 (
   // global signals
@@ -83,10 +86,13 @@ module aes_top_wrap
   end
 
   aes_top #(
-    .N_CORES ( N_CORES ),
-    .MP      ( MP      ),
-    .ID      ( ID      )
-  ) i_mac_top (
+    .N_CORES          ( N_CORES         ),
+    .N_CONTEXT        ( N_CONTEXT       ),
+    .N_IO_REGS        ( N_IO_REGS       ),
+    .N_GENERIC_REGS   ( N_GENERIC_REGS  ),
+    .MP               ( MP              ),
+    .ID               ( ID              )
+  ) i_aes_top (
     .clk_i       ( clk_i       ),
     .rst_ni      ( rst_ni      ),
     .test_mode_i ( test_mode_i ),
